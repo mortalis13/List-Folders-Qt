@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QStringList>
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+
 #include "Models/Tree/treenode.h"
 
 #include "Models/testbase.h"
@@ -16,12 +20,14 @@ class ScanDirectory : public QObject
 
 public:
     explicit ScanDirectory(QObject *parent = 0);
-    QString startScan();
+    void startScan();
     void init(const QHash<QString, QVariant> &fields);
     void test();
     QString getResult();
     void fillList();
     QString getList();
+    QString getText();
+    QString getJson();
 private:
     const QString nl="\n";
     const QString pad="    ";
@@ -30,7 +36,9 @@ private:
     QString path;       //??
 
     QString text;
-    QList<TreeNode*> jsonArray;
+    QString json;
+    QJsonArray jsonArray;
+//    QList<TreeNode*> jsonArray;
 
     QList<QString> nameList;
     QList<TestBase*> nodeList;
@@ -57,7 +65,8 @@ private:
     static QString videoExts[];
     static QString codeExts[];
     
-    QList<TreeNode *> fullScan(const QString& dir, int level=0);
+    QJsonArray fullScan(const QString& dir, int level=0);
+    QList<TreeNode *> fullScan2(const QString &dir, int level);
     void fullScan1(const QString &dir, int level=0);
     QString getPadding(int level);
     QStringList getFilters(const QString& filter);

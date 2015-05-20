@@ -63,56 +63,55 @@ QString ScanDirectory::codeExts[] ={
   "c", "cpp", "cs", "java",
 };
 
-QString ScanDirectory::startScan()
+void ScanDirectory::startScan()
 {
     jsonArray=fullScan(path);
 
-//    DirNode* d=(DirNode*) jsonArray[0];
-//    QList<TreeNode*> ch=d->children;
-
-    return text;
+    QJsonDocument doc(jsonArray);
+    QByteArray byteArray=doc.toJson();
+    json=QString(byteArray);
 }
 
-QString ScanDirectory::getResult(){
-    QString res="resultx";
-
-    DirNode* d=(DirNode*) jsonArray[0];
-//    QList<TreeNode*> ch=d->children;
-
-//    TreeNode* t=jsonArray[0];
-//    res=t->text;
-
-    res=d->text;
-
-//    res=nameList[0];
-
-//    res=nodeList[0]->text;
-
-    return res;
-}
-
-void ScanDirectory::fillList(){
-    TestBase* tb=new TestBase("123");
-    nodeList.append(tb);
-}
-
-QString ScanDirectory::getList(){
-    QString res="resultx";
-    res=nodeList[0]->text;
-
-    return res;
-}
-
-void ScanDirectory::test()
+QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 {
-    FileNode file("file1.txt", "icon");
-    QList<TreeNode> list;
-    list.append(file);
+    QString pad;
+    QJsonArray json, res;
 
-    int x=1;
+    QDir qdir=QDir(dir);
+    pad=getPadding(level);
+
+    qdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach(QFileInfo nextDir, qdir.entryInfoList()){
+        QString name=nextDir.fileName();
+        QString currentDir="[" + name + "]";
+
+        text+=pad+currentDir+nl;
+
+        res=fullScan(nextDir.absoluteFilePath(), level+1);
+
+        QJsonObject jsonObject;
+        DirNode node(name, res);
+        node.write(jsonObject);
+        json.append(jsonObject);
+    }
+
+    qdir.setFilter(QDir::Files);
+    foreach(QFileInfo nextFile, qdir.entryInfoList()){
+        QString name=nextFile.fileName();
+        QString currentFile=name;
+
+        text+=pad+currentFile+nl;
+
+        QJsonObject jsonObject;
+        FileNode node(name, getIcon(name));
+        node.write(jsonObject);
+        json.append(jsonObject);
+    }
+
+    return json;
 }
 
-QList<TreeNode*> ScanDirectory::fullScan(const QString &dir, int level)
+QList<TreeNode*> ScanDirectory::fullScan2(const QString &dir, int level)
 {
     QString pad;
     QList<TreeNode*> json, res;
@@ -127,13 +126,10 @@ QList<TreeNode*> ScanDirectory::fullScan(const QString &dir, int level)
 
         text+=pad+currentDir+nl;
 
-        TestBase* node1=new TestBase(name);
-        nodeList.append(node1);
+        res=fullScan2(nextDir.absoluteFilePath(), level+1);
 
-        res=fullScan(nextDir.absoluteFilePath(), level+1);
-
-        DirNode* node=new DirNode(name, res);
-        json.append(node);
+//        DirNode* node=new DirNode(name, res);
+//        json.append(node);
     }
 
     qdir.setFilter(QDir::Files);
@@ -143,11 +139,8 @@ QList<TreeNode*> ScanDirectory::fullScan(const QString &dir, int level)
 
         text+=pad+currentFile+nl;
 
-        TestBase* node1=new TestBase(name);
-        nodeList.append(node1);
-
-        FileNode* node=new FileNode(name, getIcon(name));
-        json.append(node);
+//        FileNode* node=new FileNode(name, getIcon(name));
+//        json.append(node);
     }
 
     return json;
@@ -168,7 +161,7 @@ void ScanDirectory::fullScan1(const QString &dir, int level)
 
         text+=pad+currentDir+nl;
 
-        fullScan(nextDir.absoluteFilePath(), level+1);
+        fullScan1(nextDir.absoluteFilePath(), level+1);
     }
 
     qdir.setFilter(QDir::Files);
@@ -190,6 +183,14 @@ QString ScanDirectory::getPadding(int level){
     return resPad;
 }
 
+QString ScanDirectory::getText(){
+    return text;
+}
+
+QString ScanDirectory::getJson(){
+    return json;
+}
+
 // --------------------------------------------------- filters ---------------------------------------------------
 
 QStringList ScanDirectory::getFilters(const QString &filter)
@@ -200,4 +201,29 @@ QStringList ScanDirectory::getFilters(const QString &filter)
 QString ScanDirectory::getIcon(const QString &file)
 {
     return file;
+}
+
+// --------------------------------------------------- test ---------------------------------------------------
+
+QString ScanDirectory::getResult(){
+    QString res="resultx";
+
+//    DirNode* d=(DirNode*) jsonArray[0];
+//    QList<TreeNode*> ch=d->children;
+
+//    res=d->text;
+
+//    res=nameList[0];
+//    res=nodeList[0]->text;
+
+    return res;
+}
+
+void ScanDirectory::test()
+{
+    FileNode file("file1.txt", "icon");
+    QList<TreeNode> list;
+    list.append(file);
+
+    int x=1;
 }
