@@ -14,7 +14,7 @@ class Controller : public QObject
 public:
     explicit Controller(MainWindow& view, Model &model);
     void setText(const QString& text);
-    void scanDir(const QString& path);
+    void scanDir(const QHash<QString, QVariant> &fields);
 signals:
 
 public slots:

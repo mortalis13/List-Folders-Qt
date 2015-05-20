@@ -13,9 +13,9 @@ void Controller::setText(const QString& text)
     m_view.printResult(res);
 }
 
-void Controller::scanDir(const QString& path)
+void Controller::scanDir(const QHash<QString, QVariant> &fields)
 {
     QString res="";
-    res=m_model.startScan(path);
+    res=m_model.startScan(fields);
     m_view.printResult(res);
 }
