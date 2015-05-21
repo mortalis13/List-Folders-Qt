@@ -3,33 +3,33 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    connect(ui->bScanDir, SIGNAL(clicked()), this, SLOT(bScanDirClick()));
+  connect(ui->bScanDir, SIGNAL(clicked()), this, SLOT(bScanDirClick()));
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+  delete ui;
 }
 
 void MainWindow::setController(Controller& controller)
 {
-    m_controller=&controller;
+  m_controller=&controller;
 }
 
 void MainWindow::printResult(const QString &text)
 {
-    ui->teOut->setPlainText(text);
+  ui->teOut->setPlainText(text);
 }
 
 void MainWindow::bScanDirClick(){
-    QHash<QString, QVariant> fields;
-    fields=Functions::getFieldsMap(ui);
-    m_controller->scanDir(fields);
+  QHash<QString, QVariant> fields;
+  fields=Functions::getFieldsMap(ui);
+  m_controller->scanDir(fields);
 }
 
 void MainWindow::init(){

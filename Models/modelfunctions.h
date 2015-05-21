@@ -13,6 +13,7 @@ public:
     static QString formatPath(QString path);
     static QString getPath(QString path);
     static void writeFile(QString path, QString text);
+    static QString readFile(QString path);
 };
 
 #endif // MODELFUNCTIONS_H

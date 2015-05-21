@@ -18,8 +18,8 @@ QString Model::startScan(const QHash<QString, QVariant> &fields)
 
     scandir.done();
 
-//    res=scandir.getText();
-    res=scandir.getJson();
+    res=scandir.getText();
+//    res=scandir.getJson();
 
     return res;
 }

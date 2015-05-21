@@ -13,7 +13,8 @@ class Functions : public QObject
 public:
     explicit Functions(QObject *parent = 0);
 
-    static QHash<QString, QVariant> getFieldsMap(Ui::MainWindow *ui);
+  static QHash<QString, QVariant> getFieldsMap(Ui::MainWindow *ui);
+  static QString formatPath(QString path);
 signals:
 
 public slots:

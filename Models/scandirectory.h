@@ -67,8 +67,6 @@ private:
     static QStringList codeExts;
     
     QJsonArray fullScan(const QString& dir, int level=0);
-    QList<TreeNode *> fullScan2(const QString &dir, int level);
-    void fullScan1(const QString &dir, int level=0);
     QString getPadding(int level);
     QStringList getFilters(QString filter);
     QString getIcon(QString file);
@@ -78,6 +76,8 @@ private:
     void exportText();
     void exportTree();
     QString getExportName(QString ext="");
+    QString getFiltersText();
+    QString replaceTemplate(QString tmpl, QString replacement, QString text);
 };
 
 #endif // SCANDIRECTORY_H

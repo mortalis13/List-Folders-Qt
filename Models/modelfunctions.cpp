@@ -20,7 +20,7 @@ bool ModelFunctions::matches(QString regex, QString text)
  * Formats path, fixes backslashes, trims
  */
 QString ModelFunctions::formatPath(QString path){
-  path=path.replace("\\\\", "/");
+  path=path.replace("\\", "/");
   path=path.trimmed();
   return path;
 }
@@ -49,6 +49,20 @@ QString ModelFunctions::regexFind(QString pattern, QString text, int group) {
 }
 
 // ----------------------------------------------------- read/write -----------------------------------------------------
+
+QString ModelFunctions::readFile(QString path) {
+  QFile file(path);
+  
+  if (!file.open(QIODevice::ReadOnly)) {
+    qWarning("Couldn't open file.");
+    return QString();
+  }
+  
+  QByteArray byteArray=file.readAll();
+  QString res(byteArray);
+  
+  return res;
+}
 
 void ModelFunctions::writeFile(QString path, QString text) {
   QFile file(path);

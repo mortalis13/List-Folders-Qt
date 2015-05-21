@@ -19,8 +19,6 @@ ScanDirectory::ScanDirectory(QObject *parent) : QObject(parent)
   totalTime=0;
 
   scanCanceled=false;
-
-  nodeList=*new QList<TestBase*>();
 }
 
 void ScanDirectory::init(const QHash<QString, QVariant> &fields){
@@ -143,68 +141,6 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
   return json;
 }
 
-QList<TreeNode*> ScanDirectory::fullScan2(const QString &dir, int level)
-{
-  QString pad;
-  QList<TreeNode*> json, res;
-
-  QDir qdir=QDir(dir);
-  pad=getPadding(level);
-
-  qdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-  foreach(QFileInfo nextDir, qdir.entryInfoList()){
-    QString name=nextDir.fileName();
-    QString currentDir="[" + name + "]";
-
-    text+=pad+currentDir+nl;
-
-    res=fullScan2(nextDir.absoluteFilePath(), level+1);
-
-    //        DirNode* node=new DirNode(name, res);
-    //        json.append(node);
-  }
-
-  qdir.setFilter(QDir::Files);
-  foreach(QFileInfo nextFile, qdir.entryInfoList()){
-    QString name=nextFile.fileName();
-    QString currentFile=name;
-
-    text+=pad+currentFile+nl;
-
-    //        FileNode* node=new FileNode(name, getIcon(name));
-    //        json.append(node);
-  }
-
-  return json;
-}
-
-void ScanDirectory::fullScan1(const QString &dir, int level)
-{
-  QString pad;
-  QList<TreeNode> json, res;
-
-  QDir qdir=QDir(dir);
-  pad=getPadding(level);
-
-  qdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-  foreach(QFileInfo nextDir, qdir.entryInfoList()){
-    QString name=nextDir.fileName();
-    QString currentDir="[" + name + "]";
-
-    text+=pad+currentDir+nl;
-
-    fullScan1(nextDir.absoluteFilePath(), level+1);
-  }
-
-  qdir.setFilter(QDir::Files);
-  foreach(QFileInfo nextFile, qdir.entryInfoList()){
-    QString name=nextFile.fileName();
-    QString currentFile=name;
-
-    text+=pad+currentFile+nl;
-  }
-}
-
 // --------------------------------------------------- logging ---------------------------------------------------
 
 /*
@@ -218,6 +154,17 @@ int ScanDirectory::getDirCount(int totalCount){
 
 // --------------------------------------------------- helpers ---------------------------------------------------
 
+/*
+ * Replaces strings from the tree template (strings format: '_string_') with the 'replacement' text
+ */
+QString ScanDirectory::replaceTemplate(QString tmpl, QString replacement, QString text){
+  text=text.replace(tmpl, replacement);
+  return text;
+}
+
+/*
+ * Outputs padding spaces for text output depending on nesting level
+ */
 QString ScanDirectory::getPadding(int level){
   QString resPad = "";
   for (int i = 0; i < level; i++) {
@@ -342,6 +289,9 @@ bool ScanDirectory::filterDirectory(QString dir) {
   return false;
 }
 
+/*
+ * Cleans, trims and checks filters for emptiness
+ */
 QStringList ScanDirectory::getFilters(QString filter)
 {
   QStringList list;
@@ -355,6 +305,29 @@ QStringList ScanDirectory::getFilters(QString filter)
   }
 
   return list;
+}
+
+/*
+ * Gets text for the tree template
+ */
+QString ScanDirectory::getFiltersText() {
+  QString filterExtText="", excludeExtText="", filterDirText="", filters="";
+  
+  if(filterExt.size()!=0){
+    filterExtText = filterExt.join(",");
+  }
+  if(excludeExt.size()!=0){
+    excludeExtText = excludeExt.join(",");
+  }
+  if(filterDir.size()!=0){
+    filterDirText = filterDir.join(",");
+  }
+  
+  filters="Files include ["+filterExtText+"]";
+  filters+=", Files exclude ["+excludeExtText+"]";
+  filters+=", Directories ["+filterDirText+"]";
+  
+  return filters;
 }
 
 // --------------------------------------------------- exports ---------------------------------------------------
@@ -371,7 +344,6 @@ void ScanDirectory::exportText(){
   fileName = exportPath + fileName;
   
   text=this->text;
-  
   ModelFunctions::writeFile(fileName, text);
 }
 
@@ -385,7 +357,42 @@ void ScanDirectory::exportText(){
  * Then creates .json in the 'exports/tree/json' which is read by the script in the exported .html page
  */
 void ScanDirectory::exportTree(){
+  QString tmpl, doc, treeName, 
+  exportPath, jsonFolder, jsonPath, 
+  exportDoc, exportJSON;
+  QString filters;
+  QString jsonFile, htmlFile;
   
+  if(json.length()==0) return;
+  
+  treeName=getExportName("");
+  
+  tmpl=ModelFunctions::getPath("templates/tree.html");
+  exportPath=ModelFunctions::getPath("export/tree/");
+  jsonFolder="json/";                                                   // should be "/" because "\" prints as control symbol
+  jsonPath=exportPath+jsonFolder;
+  
+  exportDoc=treeName+".html";
+  exportJSON=treeName+".json";
+  
+  doc=ModelFunctions::readFile(tmpl);
+  if (doc.length()==0) {
+    qWarning("No \"templates/tree.html\" file");
+    return;
+  }
+  
+  doc=replaceTemplate("_jsonPath_", jsonFolder+exportJSON, doc);
+  doc=replaceTemplate("_Title_", "Directory: "+treeName, doc);
+  doc=replaceTemplate("_FolderPath_", "Directory: "+path, doc);
+  
+  filters=getFiltersText();
+  doc=replaceTemplate("_Filters_", "Filters: "+filters, doc);
+  
+  htmlFile=exportPath+exportDoc;                                        // get paths
+  jsonFile=jsonPath+exportJSON;
+    
+  ModelFunctions::writeFile(htmlFile, doc);                                   // write results
+  ModelFunctions::writeFile(jsonFile, json);
 }
 
 /*
@@ -419,15 +426,6 @@ QString ScanDirectory::getExportName(QString ext){
 
 QString ScanDirectory::getResult(){
   QString res="resultx";
-
-  //    DirNode* d=(DirNode*) jsonArray[0];
-  //    QList<TreeNode*> ch=d->children;
-
-  //    res=d->text;
-
-  //    res=nameList[0];
-  //    res=nodeList[0]->text;
-
   return res;
 }
 
