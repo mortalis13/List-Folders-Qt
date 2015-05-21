@@ -21,6 +21,7 @@ public:
     void setController(Controller& controller);
     void printResult(const QString& text);
 
+    void init();
 private slots:
     void bScanDirClick();
 

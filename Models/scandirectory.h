@@ -57,20 +57,23 @@ private:
     long prevTime;
     int totalTime;
 
-    static bool scanCanceled;
+    bool scanCanceled;
 
-    static QString exts[];
-    static QString imageExts[];
-    static QString musicExts[];
-    static QString videoExts[];
-    static QString codeExts[];
+    static QStringList exts;
+    static QStringList imageExts;
+    static QStringList musicExts;
+    static QStringList videoExts;
+    static QStringList codeExts;
     
     QJsonArray fullScan(const QString& dir, int level=0);
     QList<TreeNode *> fullScan2(const QString &dir, int level);
     void fullScan1(const QString &dir, int level=0);
     QString getPadding(int level);
-    QStringList getFilters(const QString& filter);
-    QString getIcon(const QString &file);
+    QStringList getFilters(QString filter);
+    QString getIcon(QString file);
+    int getDirCount(int totalCount);
+    bool filterDirectory(QString dir);
+    bool filterFile(QString file);
 };
 
 #endif // SCANDIRECTORY_H

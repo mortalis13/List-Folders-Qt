@@ -14,5 +14,7 @@ int main(int argc, char *argv[])
     view.setController(controller);
     view.show();
 
+    view.init();
+
     return a.exec();
 }

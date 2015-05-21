@@ -10,15 +10,15 @@ Model::Model(QObject *parent) :
 
 QString Model::startScan(const QHash<QString, QVariant> &fields)
 {
-    QString res="";
+    QString res="nothing";
     ScanDirectory scandir;
 
     scandir.init(fields);
     scandir.startScan();
 
 //    res=scandir.getText();
-
     res=scandir.getJson();
+
     return res;
 }
 

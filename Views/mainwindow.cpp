@@ -27,12 +27,13 @@ void MainWindow::printResult(const QString &text)
 }
 
 void MainWindow::bScanDirClick(){
-    QString path;
     QHash<QString, QVariant> fields;
-
-    path="C:/1-Roman/Documents/8-test/list-test/en";
-    ui->lePath->setText(path);
-
     fields=Functions::getFieldsMap(ui);
     m_controller->scanDir(fields);
+}
+
+void MainWindow::init(){
+  QString path="C:/1-Roman/Documents/8-test/list-test/en";
+  ui->lePath->setText(path);
+  ui->chExportText->setChecked(true);
 }
