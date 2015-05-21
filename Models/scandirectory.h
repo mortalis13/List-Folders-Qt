@@ -28,6 +28,7 @@ public:
     QString getList();
     QString getText();
     QString getJson();
+    void done();
 private:
     const QString nl="\n";
     const QString pad="    ";
@@ -74,6 +75,9 @@ private:
     int getDirCount(int totalCount);
     bool filterDirectory(QString dir);
     bool filterFile(QString file);
+    void exportText();
+    void exportTree();
+    QString getExportName(QString ext="");
 };
 
 #endif // SCANDIRECTORY_H

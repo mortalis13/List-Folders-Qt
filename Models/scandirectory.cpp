@@ -27,6 +27,7 @@ void ScanDirectory::init(const QHash<QString, QVariant> &fields){
   QString filterExtText, excludeExtText, filterDirText;
 
   path=fields.value("path").toString();
+  path=ModelFunctions::formatPath(path);
 
   filterExtText=fields.value("filterExt").toString();
   excludeExtText=fields.value("excludeExt").toString();
@@ -76,7 +77,10 @@ void ScanDirectory::startScan()
   json=QString(byteArray);
 }
 
-QStringList s;
+void ScanDirectory::done(){
+  if(doExportText) exportText();
+  if(doExportTree) exportTree();
+}
 
 QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 {
@@ -351,6 +355,64 @@ QStringList ScanDirectory::getFilters(QString filter)
   }
 
   return list;
+}
+
+// --------------------------------------------------- exports ---------------------------------------------------
+
+/*
+ * Exports text to a .txt file in 'export/text'
+ */
+void ScanDirectory::exportText(){
+  QString exportPath, fileName, ext, text;
+
+  exportPath = ModelFunctions::getPath("export/text/");
+  ext=".txt";
+  fileName = getExportName(ext);
+  fileName = exportPath + fileName;
+  
+  text=this->text;
+  
+  ModelFunctions::writeFile(fileName, text);
+}
+
+/*
+ * Exports .json and .html files to the 'export/tree'
+ * The .html file can be used directly to view the tree
+ * The jsTree plugin must be in the 'tree/lib'
+ *
+ * The method gets the .html template from 'templates/tree.html', 
+ * replaces template strings with the current data and create new .html in the 'exports/tree'
+ * Then creates .json in the 'exports/tree/json' which is read by the script in the exported .html page
+ */
+void ScanDirectory::exportTree(){
+  
+}
+
+/*
+ * Returns the name that will be used to export 
+ * text, markup and tree views of the directory structure
+ */
+QString ScanDirectory::getExportName(QString ext){
+  bool useCurrentDir=true;
+  QString exportName, name, res;
+  
+  exportName="no-name";
+  
+  if(this->exportName.length()!=0){
+    exportName=this->exportName;
+    useCurrentDir=false;
+  }
+  
+  if(useCurrentDir){
+    res = ModelFunctions::regexFind("/([^/]+)/?$", path);
+    if(res.length()!=0)
+      exportName=res;
+  }
+  
+  name=exportName;
+  if(ext.length()!=0) name+=ext;
+  
+  return name;
 }
 
 // --------------------------------------------------- test ---------------------------------------------------

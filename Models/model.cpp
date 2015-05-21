@@ -16,6 +16,8 @@ QString Model::startScan(const QHash<QString, QVariant> &fields)
     scandir.init(fields);
     scandir.startScan();
 
+    scandir.done();
+
 //    res=scandir.getText();
     res=scandir.getJson();
 

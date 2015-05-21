@@ -10,6 +10,9 @@ public:
     ModelFunctions();
     static bool matches(QString regex, QString text);
     static QString regexFind(QString pattern, QString text, int group = 1);
+    static QString formatPath(QString path);
+    static QString getPath(QString path);
+    static void writeFile(QString path, QString text);
 };
 
 #endif // MODELFUNCTIONS_H
