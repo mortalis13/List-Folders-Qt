@@ -1,6 +1,8 @@
 #include "model.h"
 #include "Models/scandirectory.h"
 #include "Models/test.h"
+#include "Models/modelobserver.h"
+
 #include <QDir>
 
 Model::Model(QObject *parent) :
@@ -8,22 +10,19 @@ Model::Model(QObject *parent) :
 {
 }
 
-QString Model::startScan(const QHash<QString, QVariant> &fields)
+void Model::startScan(const QHash<QString, QVariant> &fields)
 {
-    QString res="nothing";
-    ScanDirectory scandir;
-
-    scandir.init(fields);
-    scandir.startScan();
-
-    scandir.done();
-
-    res=scandir.getText();
-//    res=scandir.getJson();
-
-    return res;
+    ScanDirectory *scandir=new ScanDirectory();
+    scandir->init(fields);
+    scandir->registerObservers(observers);
+    scandir->startScan();
 }
 
-QString Model::processText(const QString &text){
-    return "="+text+"=";
+void Model::registerObserver(ModelObserver *observer){
+  observers.append(observer);
+}
+
+void Model::notifyObservers(){
+  foreach(ModelObserver *observer, observers)
+    observer->updateState(5);
 }

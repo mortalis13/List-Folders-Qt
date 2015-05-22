@@ -2,17 +2,23 @@
 #define MODEL_H
 
 #include <QObject>
+#include "Models/modelobserver.h"
 
 class Model : public QObject
 {
     Q_OBJECT
 public:
     explicit Model(QObject *parent = 0);
-    QString startScan(const QHash<QString, QVariant> &fields);
+    void startScan(const QHash<QString, QVariant> &fields);
     QString processText(const QString& text);
+    void registerObserver(ModelObserver *observer);
 signals:
 
 public slots:
+
+private:
+    QList<ModelObserver*> observers;
+    void notifyObservers();
 };
 
 #endif // MODEL_H

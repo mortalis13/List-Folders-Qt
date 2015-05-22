@@ -3,12 +3,15 @@
 #include <QHash>
 #include <QVariant>
 #include <QDebug>
+#include <QThread>
 #include <Models/Tree/dirnode.h>
 #include <Models/Tree/filenode.h>
 #include <Models/Tree/treenode.h>
 #include <Models/modelfunctions.h>
+#include "Models/modelobserver.h"
 
-ScanDirectory::ScanDirectory(QObject *parent) : QObject(parent)
+ScanDirectory::ScanDirectory() : QThread()
+//ScanDirectory::ScanDirectory(QObject *parent) : QObject(parent), QThread()
 {
   text="";
   exportName="";
@@ -19,25 +22,8 @@ ScanDirectory::ScanDirectory(QObject *parent) : QObject(parent)
   totalTime=0;
 
   scanCanceled=false;
-}
 
-void ScanDirectory::init(const QHash<QString, QVariant> &fields){
-  QString filterExtText, excludeExtText, filterDirText;
-
-  path=fields.value("path").toString();
-  path=ModelFunctions::formatPath(path);
-
-  filterExtText=fields.value("filterExt").toString();
-  excludeExtText=fields.value("excludeExt").toString();
-  filterDirText=fields.value("filterDir").toString();
-
-  doExportText=fields.value("doExportText").toBool();
-  doExportTree=fields.value("doExportTree").toBool();
-  exportName=fields.value("exportName").toString();
-
-  filterExt=getFilters(filterExtText);
-  excludeExt=getFilters(excludeExtText);
-  filterDir=getFilters(filterDirText);
+  connect(this, SIGNAL(updateState(int)), this, SLOT(notifyObservers(int)));
 }
 
 // sets of extensions for tree view icons (stored in lib/images)
@@ -66,13 +52,45 @@ QStringList ScanDirectory::codeExts ={
   "c", "cpp", "cs", "java",
 };
 
+void ScanDirectory::init(const QHash<QString, QVariant> &fields){
+  QString filterExtText, excludeExtText, filterDirText;
+
+  path=fields.value("path").toString();
+  path=ModelFunctions::formatPath(path);
+
+  filterExtText=fields.value("filterExt").toString();
+  excludeExtText=fields.value("excludeExt").toString();
+  filterDirText=fields.value("filterDir").toString();
+
+  doExportText=fields.value("doExportText").toBool();
+  doExportTree=fields.value("doExportTree").toBool();
+  exportName=fields.value("exportName").toString();
+
+  filterExt=getFilters(filterExtText);
+  excludeExt=getFilters(excludeExtText);
+  filterDir=getFilters(filterDirText);
+}
+
 void ScanDirectory::startScan()
 {
-  jsonArray=fullScan(path);
+//  ScanWorker worker;
+//  worker.start();
 
+  start();
+
+//  jsonArray=fullScan(path);
+//  QJsonDocument doc(jsonArray);
+//  QByteArray byteArray=doc.toJson();
+//  json=QString(byteArray);
+}
+
+void ScanDirectory::run(){
+  jsonArray=fullScan(path);
   QJsonDocument doc(jsonArray);
   QByteArray byteArray=doc.toJson();
   json=QString(byteArray);
+
+  done();
 }
 
 void ScanDirectory::done(){
@@ -104,7 +122,7 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 
     if(level==0){
       if(!filterDirectory(name)) continue;
-      //            updateStatusBar("scanning", currentDir);
+      // updateStatusBar("scanning", currentDir);
     }
 
     if(doExportText)
@@ -120,6 +138,12 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 
     if (level == 0) {
       // logging
+      dirCount++;
+      int progress=(int) ((float) dirCount/rootDirCount*100);
+      
+      emit updateState(progress);
+      
+      // notifyObservers(progress);
     }
   }
 
@@ -434,6 +458,15 @@ void ScanDirectory::test()
   FileNode file("file1.txt", "icon");
   QList<TreeNode> list;
   list.append(file);
+}
 
-  int x=1;
+// --------------------------------------------------- service ---------------------------------------------------
+
+void ScanDirectory::registerObservers(QList<ModelObserver *> observers){
+  this->observers=observers;
+}
+
+void ScanDirectory::notifyObservers(int progress){
+  foreach(ModelObserver *observer, observers)
+    observer->updateState(progress);
 }

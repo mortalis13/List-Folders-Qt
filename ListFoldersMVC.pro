@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     Models/Tree/treenode.cpp \
     Models/test.cpp \
     Models/testbase.cpp \
-    Models/modelfunctions.cpp
+    Models/modelfunctions.cpp \
+    Models/testthread.cpp \
+    Models/modelobserver.cpp
 
 HEADERS  += mainwindow.h \
     Views/mainwindow.h \
@@ -36,7 +38,9 @@ HEADERS  += mainwindow.h \
     Models/Tree/treenode.h \
     Models/test.h \
     Models/testbase.h \
-    Models/modelfunctions.h
+    Models/modelfunctions.h \
+    Models/testthread.h \
+    Models/modelobserver.h
 
 FORMS    += Views/mainwindow.ui
 

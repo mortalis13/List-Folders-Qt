@@ -7,8 +7,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    MainWindow view;
     Model model;
+
+    MainWindow view(model);
+//    MainWindow *view=new MainWindow(model);
+
     Controller controller(view, model);
 
     view.setController(controller);
