@@ -2,6 +2,7 @@
 #include "Views/functions.h"
 #include "ui_mainwindow.h"
 #include "Models/modelobserver.h"
+#include <QSet>
 
 MainWindow::MainWindow(Model &model, QWidget *parent) :
   QMainWindow(parent),
@@ -30,9 +31,16 @@ void MainWindow::printResult(const QString &text)
 }
 
 void MainWindow::bScanDirClick(){
+  prepareProcessing();
   QHash<QString, QVariant> fields;
   fields=Functions::getFieldsMap(ui);
   m_controller->scanDir(fields);
+}
+
+void MainWindow::prepareProcessing(){
+  ui->progressBar->setValue(0);
+  Functions::clearLog(ui);
+  ui->bScanDir->setText("Stop");
 }
 
 void MainWindow::init(){
@@ -41,13 +49,41 @@ void MainWindow::init(){
   ui->chExportText->setChecked(true);
 }
 
-void MainWindow::updateState(int progress)
+void MainWindow::updateState(QString currentDir, QString timeString, int progress, int dirCount, int rootDirCount)
 {
-  QString text="Progress: " + QString::number(progress);
+  Functions::log(ui, currentDir);
+  Functions::log(ui, timeString+"\t Dir: "+QString::number(dirCount)+"/"+QString::number(rootDirCount)+
+                 " \t Progress: "+QString::number(progress)+"%\n");
+  Functions::setProgress(ui, progress);
+}
 
-  //  ui->leExportName->setText(text);
-  ui->teOut->appendPlainText(text);
+void MainWindow::updateStatusBar(QString type, QString currentDir, QString totalTime)
+{
+  QString text="";
+  QStringList types={"scanning", "finish", "cancel"};
 
-  //  printResult("Progress: ");
-//  printResult("Progress: "+progress);
+  switch(types.indexOf(type)){
+  case 0:
+    text="Scanning: "+currentDir;
+    break;
+  case 1:
+    text="Scanning finished (time: "+totalTime+")";
+    break;
+  case 2:
+    text="Scanning canceled";
+    break;
+  }
+  ui->statusBar->showMessage(text);
+}
+
+void MainWindow::scanningFinished(int totalTime){
+  Functions::log(ui, "----------------------------");
+  QString time=Functions::formatTime(totalTime, "%.2f s");
+  Functions::log(ui, "Total time: "+time);
+
+  Functions::setProgress(ui, 100);
+  updateStatusBar("finish", "", time);
+  ui->bScanDir->setText("Scan Directory");
+
+//  MainForm.startScan=true;
 }

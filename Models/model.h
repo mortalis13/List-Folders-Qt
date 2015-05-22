@@ -18,7 +18,6 @@ public slots:
 
 private:
     QList<ModelObserver*> observers;
-    void notifyObservers();
 };
 
 #endif // MODEL_H

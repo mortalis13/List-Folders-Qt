@@ -23,7 +23,10 @@ ScanDirectory::ScanDirectory() : QThread()
 
   scanCanceled=false;
 
-  connect(this, SIGNAL(updateState(int)), this, SLOT(notifyObservers(int)));
+//connect( this, SIGNAL(updateState(int)), this, SLOT(notifyObservers(int)) );
+  connect( this, SIGNAL(updateState(QString, QString, int)), this, SLOT(notifyObservers(QString, QString, int)) );
+  connect( this, SIGNAL(updateStatusBar(QString, QString)), this, SLOT(notifyUpdateStatusBar(QString, QString)) );
+  connect( this, SIGNAL(scanningFinished()), this, SLOT(notifyScanningFinished()) );
 }
 
 // sets of extensions for tree view icons (stored in lib/images)
@@ -71,11 +74,17 @@ void ScanDirectory::init(const QHash<QString, QVariant> &fields){
   filterDir=getFilters(filterDirText);
 }
 
+void ScanDirectory::prepareProcessing(){
+//  prevTime=
+  time.start();
+}
+
 void ScanDirectory::startScan()
 {
 //  ScanWorker worker;
 //  worker.start();
 
+  prepareProcessing();
   start();
 
 //  jsonArray=fullScan(path);
@@ -96,6 +105,8 @@ void ScanDirectory::run(){
 void ScanDirectory::done(){
   if(doExportText) exportText();
   if(doExportTree) exportTree();
+
+  emit scanningFinished();
 }
 
 QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
@@ -122,7 +133,7 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 
     if(level==0){
       if(!filterDirectory(name)) continue;
-      // updateStatusBar("scanning", currentDir);
+       emit updateStatusBar("scanning", currentDir);
     }
 
     if(doExportText)
@@ -140,10 +151,8 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
       // logging
       dirCount++;
       int progress=(int) ((float) dirCount/rootDirCount*100);
-      
-      emit updateState(progress);
-      
-      // notifyObservers(progress);
+      logStats(currentDir, progress);
+//      emit updateState(progress);
     }
   }
 
@@ -166,6 +175,15 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 }
 
 // --------------------------------------------------- logging ---------------------------------------------------
+
+int ScanDirectory::logStats(QString currentDir, int progress){
+  int timeDiff=time.elapsed();
+  totalTime+=timeDiff;
+
+  QString timeString=ModelFunctions::formatTime(timeDiff, "Time: %.2f s ");
+  emit updateState(currentDir, timeString, progress);
+  time.restart();
+}
 
 /*
  * Gets top-level count of directories to be scanned
@@ -446,6 +464,34 @@ QString ScanDirectory::getExportName(QString ext){
   return name;
 }
 
+// --------------------------------------------------- service ---------------------------------------------------
+
+void ScanDirectory::registerObservers(QList<ModelObserver *> observers){
+  this->observers=observers;
+}
+
+void ScanDirectory::notifyObservers(QString currentDir, QString timeString, int progress){
+  foreach(ModelObserver *observer, observers)
+    observer->updateState(currentDir, timeString, progress, dirCount, rootDirCount);
+}
+
+void ScanDirectory::notifyUpdateStatusBar(QString type, QString currentDir)
+{
+  foreach(ModelObserver *observer, observers)
+    observer->updateStatusBar(type, currentDir);
+}
+
+void ScanDirectory::notifyScanningFinished()
+{
+  foreach(ModelObserver *observer, observers)
+    observer->scanningFinished(totalTime);
+}
+
+//void ScanDirectory::notifyObservers(int progress){
+//  foreach(ModelObserver *observer, observers)
+//    observer->updateState(progress);
+//}
+
 // --------------------------------------------------- test ---------------------------------------------------
 
 QString ScanDirectory::getResult(){
@@ -458,15 +504,4 @@ void ScanDirectory::test()
   FileNode file("file1.txt", "icon");
   QList<TreeNode> list;
   list.append(file);
-}
-
-// --------------------------------------------------- service ---------------------------------------------------
-
-void ScanDirectory::registerObservers(QList<ModelObserver *> observers){
-  this->observers=observers;
-}
-
-void ScanDirectory::notifyObservers(int progress){
-  foreach(ModelObserver *observer, observers)
-    observer->updateState(progress);
 }

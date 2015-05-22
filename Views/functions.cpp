@@ -36,3 +36,21 @@ QHash<QString, QVariant> Functions::getFieldsMap(Ui::MainWindow* ui) {
 
     return dict;
 }
+
+void Functions::setProgress(Ui::MainWindow* ui, int progress){
+  ui->progressBar->setValue(progress);
+}
+
+void Functions::log(Ui::MainWindow* ui, const QString &text){
+  ui->teOut->appendPlainText(text);
+}
+
+void Functions::clearLog(Ui::MainWindow* ui){
+  ui->teOut->clear();
+}
+
+QString Functions::formatTime(int time, QString format)
+{
+  QString res;
+  return res.sprintf(qPrintable(format), (float)time / 1000);
+}

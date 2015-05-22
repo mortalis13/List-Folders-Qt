@@ -14,6 +14,7 @@ public:
     static QString getPath(QString path);
     static void writeFile(QString path, QString text);
     static QString readFile(QString path);
+    static QString formatTime(int time, QString format);
 };
 
 #endif // MODELFUNCTIONS_H

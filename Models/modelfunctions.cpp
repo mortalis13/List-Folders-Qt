@@ -64,6 +64,12 @@ QString ModelFunctions::readFile(QString path) {
   return res;
 }
 
+QString ModelFunctions::formatTime(int time, QString format)
+{
+  QString res;
+  return res.sprintf(qPrintable(format), (float)time / 1000);
+}
+
 void ModelFunctions::writeFile(QString path, QString text) {
   QFile file(path);
   

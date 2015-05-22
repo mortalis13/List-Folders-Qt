@@ -21,8 +21,3 @@ void Model::startScan(const QHash<QString, QVariant> &fields)
 void Model::registerObserver(ModelObserver *observer){
   observers.append(observer);
 }
-
-void Model::notifyObservers(){
-  foreach(ModelObserver *observer, observers)
-    observer->updateState(5);
-}

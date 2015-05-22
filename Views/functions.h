@@ -15,6 +15,10 @@ public:
 
   static QHash<QString, QVariant> getFieldsMap(Ui::MainWindow *ui);
   static QString formatPath(QString path);
+  static void clearLog(Ui::MainWindow *ui);
+  static void setProgress(Ui::MainWindow *ui, int progress);
+  static void log(Ui::MainWindow *ui, const QString &text);
+  static QString formatTime(int time, QString format);
 signals:
 
 public slots:

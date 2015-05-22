@@ -24,14 +24,20 @@ public:
     void setController(Controller& controller);
     void printResult(const QString& text);
     void init();
-    void updateState(int progress);
+//    void updateState(int progress);
+    void updateState(QString currentDir, QString timeString, int progress, int dirCount, int rootDirCount);
+    void updateStatusBar(QString type, QString currentDir="", QString totalTime="");
+    void scanningFinished(int totalTime);
 private slots:
     void bScanDirClick();
 
 private:
+    const QString nl="\n";
+
     Ui::MainWindow *ui;
     Controller* m_controller;
     Model &m_model;
+    void prepareProcessing();
 };
 
 #endif // MAINWINDOW_H

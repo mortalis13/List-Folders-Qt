@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QThread>
+#include <QTime>
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -11,9 +12,6 @@
 
 #include "Models/Tree/treenode.h"
 #include "Models/modelobserver.h"
-#include "Models/testbase.h"
-
-class TestBase;
 
 class ScanDirectory:public QThread
 //    class ScanDirectory : public QObject, public QThread
@@ -48,9 +46,13 @@ public:
     void registerObservers(QList<ModelObserver *> observers);
 
 public slots:
-    void notifyObservers(int progress);
+    void notifyObservers(QString currentDir, QString timeString, int progress);
+    void notifyUpdateStatusBar(QString type, QString currentDir);
+    void notifyScanningFinished();
 signals:
-    void updateState(int);
+    void updateState(QString, QString, int);
+    void updateStatusBar(QString, QString);
+    void scanningFinished();
 
 private:
     const QString nl="\n";
@@ -62,10 +64,8 @@ private:
     QString text;
     QString json;
     QJsonArray jsonArray;
-//    QList<TreeNode*> jsonArray;
 
     QList<QString> nameList;
-    QList<TestBase*> nodeList;
 
     QStringList filterExt;
     QStringList excludeExt;
@@ -80,6 +80,7 @@ private:
     int rootDirCount;
     long prevTime;
     int totalTime;
+    QTime time;
 
     bool scanCanceled;
 
@@ -103,7 +104,8 @@ private:
     QString getExportName(QString ext="");
     QString getFiltersText();
     QString replaceTemplate(QString tmpl, QString replacement, QString text);
-
+    void prepareProcessing();
+    int logStats(QString currentDir, int progress);
 };
 
 #endif // SCANDIRECTORY_H
