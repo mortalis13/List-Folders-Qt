@@ -15,6 +15,8 @@ public:
     static void writeFile(QString path, QString text);
     static QString readFile(QString path);
     static QString formatTime(int time, QString format);
+    static QString encodeFields(const QHash<QString, QVariant> &fields);
+    static QHash<QString, QVariant> decodeFields(QString json);
 };
 
 #endif // MODELFUNCTIONS_H

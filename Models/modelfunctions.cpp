@@ -1,6 +1,11 @@
 #include "Models/modelfunctions.h"
 
 #include <QFile>
+#include <QVariant>
+#include <QHash>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 ModelFunctions::ModelFunctions()
 {
@@ -68,6 +73,42 @@ QString ModelFunctions::formatTime(int time, QString format)
 {
   QString res;
   return res.sprintf(qPrintable(format), (float)time / 1000);
+}
+
+QString ModelFunctions::encodeFields(const QHash<QString, QVariant> &fields)
+{
+  QJsonArray jsonArray;
+  QString json;
+
+  foreach (QString key, fields.keys()) {
+    QJsonObject item;
+    item[key]=fields[key].toString();
+    jsonArray.append(item);
+  }
+
+  QJsonDocument doc(jsonArray);
+  QByteArray byteArray=doc.toJson();
+  json=QString(byteArray);
+
+  return json;
+}
+
+QHash<QString, QVariant> ModelFunctions::decodeFields(QString json){
+  QHash<QString, QVariant> fields;
+  
+  QByteArray byteArray(qPrintable(json));
+  QJsonDocument doc(QJsonDocument::fromJson(byteArray));
+  QJsonArray array=doc.array();
+
+  foreach (QJsonValue val, array) {
+    QJsonObject item=val.toObject();
+    QString key=item.keys()[0];
+    QString value=item[key].toString();
+    
+    fields.insert(key, value);
+  }
+  
+  return fields;
 }
 
 void ModelFunctions::writeFile(QString path, QString text) {

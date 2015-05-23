@@ -37,6 +37,18 @@ QHash<QString, QVariant> Functions::getFieldsMap(Ui::MainWindow* ui) {
     return dict;
 }
 
+void Functions::loadConfig(Ui::MainWindow* ui, const QHash<QString, QVariant> &fields)
+{
+  ui->lePath->setText(fields["path"].toString());
+  ui->teFilterExt->setPlainText(fields["filterExt"].toString());
+  ui->teExcludeExt->setPlainText(fields["excludeExt"].toString());
+  ui->teFilterDir->setPlainText(fields["filterDir"].toString());
+
+  ui->chExportText->setChecked(fields["doExportText"].toBool());
+  ui->chExportTree->setChecked(fields["doExportTree"].toBool());
+  ui->leExportName->setText(fields["exportName"].toString());
+}
+
 void Functions::setProgress(Ui::MainWindow* ui, int progress){
   ui->progressBar->setValue(progress);
 }

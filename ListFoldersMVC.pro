@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     Models/testbase.cpp \
     Models/modelfunctions.cpp \
     Models/testthread.cpp \
-    Models/modelobserver.cpp
+    Models/modelobserver.cpp \
+    Models/database.cpp
 
 HEADERS  += mainwindow.h \
     Views/mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     Models/testbase.h \
     Models/modelfunctions.h \
     Models/testthread.h \
-    Models/modelobserver.h
+    Models/modelobserver.h \
+    Models/database.h
 
 FORMS    += Views/mainwindow.ui
 

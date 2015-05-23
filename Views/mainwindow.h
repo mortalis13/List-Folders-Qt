@@ -28,6 +28,7 @@ public:
     void updateState(QString currentDir, QString timeString, int progress, int dirCount, int rootDirCount);
     void updateStatusBar(QString type, QString currentDir="", QString totalTime="");
     void scanningFinished(int totalTime);
+    void loadConfig();
 private slots:
     void bScanDirClick();
 

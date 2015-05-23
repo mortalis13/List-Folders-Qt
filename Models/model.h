@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "Models/modelobserver.h"
+#include "Models/database.h"
 
 class Model : public QObject
 {
@@ -12,12 +13,15 @@ public:
     void startScan(const QHash<QString, QVariant> &fields);
     QString processText(const QString& text);
     void registerObserver(ModelObserver *observer);
+    void saveConfig(const QHash<QString, QVariant> &fields);
+    QHash<QString, QVariant> loadConfig();
 signals:
 
 public slots:
 
 private:
     QList<ModelObserver*> observers;
+    Database *db;
 };
 
 #endif // MODEL_H

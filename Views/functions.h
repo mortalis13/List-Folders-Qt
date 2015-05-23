@@ -19,6 +19,7 @@ public:
   static void setProgress(Ui::MainWindow *ui, int progress);
   static void log(Ui::MainWindow *ui, const QString &text);
   static QString formatTime(int time, QString format);
+  static void loadConfig(Ui::MainWindow *ui, const QHash<QString, QVariant> &fields);
 signals:
 
 public slots:

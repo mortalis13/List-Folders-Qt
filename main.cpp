@@ -8,16 +8,15 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     Model model;
-
     MainWindow view(model);
-//    MainWindow *view=new MainWindow(model);
-
     Controller controller(view, model);
 
     view.setController(controller);
     view.show();
 
-    view.init();
+//    view.init();
+
+    view.loadConfig();
 
     return a.exec();
 }

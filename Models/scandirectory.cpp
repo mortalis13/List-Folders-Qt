@@ -95,6 +95,7 @@ void ScanDirectory::startScan()
 
 void ScanDirectory::run(){
   jsonArray=fullScan(path);
+  
   QJsonDocument doc(jsonArray);
   QByteArray byteArray=doc.toJson();
   json=QString(byteArray);
