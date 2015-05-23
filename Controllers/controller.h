@@ -17,6 +17,7 @@ public:
     void scanDir(const QHash<QString, QVariant> &fields);
     void saveConfig(const QHash<QString, QVariant> &fields);
     QHash<QString, QVariant> loadConfig();
+    void stopScan();
 signals:
 
 public slots:

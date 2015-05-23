@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <QObject>
+#include "Models/scandirectory.h"
 #include "Models/modelobserver.h"
 #include "Models/database.h"
 
@@ -15,12 +16,14 @@ public:
     void registerObserver(ModelObserver *observer);
     void saveConfig(const QHash<QString, QVariant> &fields);
     QHash<QString, QVariant> loadConfig();
+    void stopScan();
 signals:
 
 public slots:
 
 private:
     QList<ModelObserver*> observers;
+    ScanDirectory *scandir;
     Database *db;
 };
 

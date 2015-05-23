@@ -2,7 +2,8 @@
 #include "Views/functions.h"
 #include "ui_mainwindow.h"
 #include "Models/modelobserver.h"
-#include <QSet>
+#include <QFileDialog>
+#include <QShortcut>
 
 MainWindow::MainWindow(Model &model, QWidget *parent) :
   QMainWindow(parent),
@@ -10,8 +11,10 @@ MainWindow::MainWindow(Model &model, QWidget *parent) :
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-
-  connect(ui->bScanDir, SIGNAL(clicked()), this, SLOT(bScanDirClick()));
+  scanStarted=false;
+  scanCanceled=false;
+  addActions();
+  addShortcuts();
   model.registerObserver(this);
 }
 
@@ -22,6 +25,33 @@ MainWindow::~MainWindow()
   m_controller->saveConfig(fields);
 
   delete ui;
+}
+
+void MainWindow::addActions()
+{
+  connect(ui->bScanDir, SIGNAL(clicked()), this, SLOT(bScanDirClick()));
+  connect(ui->bTreeViewer, SIGNAL(clicked()), this, SLOT(bTreeViewerClick()));
+  connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(bBrowseClick()));
+
+  connect(ui->bClearExcludeExt, SIGNAL(clicked()), this, SLOT(bClearExcludeExtClick()));
+  connect(ui->bClearFilterDir, SIGNAL(clicked()), this, SLOT(bClearFilterDirClick()));
+  connect(ui->bClearFilterExt, SIGNAL(clicked()), this, SLOT(bClearFilterExtClick()));
+  connect(ui->bClearOut, SIGNAL(clicked()), this, SLOT(bClearOutClick()));
+}
+
+void MainWindow::addShortcuts()
+{
+  QShortcut *bScanDir=new QShortcut(QKeySequence("Ctrl+R"), this);
+  connect(bScanDir, SIGNAL(activated()), ui->bScanDir, SLOT(click()));
+
+  QShortcut *bBrowse=new QShortcut(QKeySequence("Ctrl+O"), this);
+  connect(bBrowse, SIGNAL(activated()), ui->bBrowse, SLOT(click()));
+
+  QShortcut *bTreeViewer=new QShortcut(QKeySequence("Ctrl+T"), this);
+  connect(bTreeViewer, SIGNAL(activated()), ui->bTreeViewer, SLOT(click()));
+
+  QShortcut *quit=new QShortcut(QKeySequence("Esc"), this);
+  connect(quit, SIGNAL(activated()), this, SLOT(close()));
 }
 
 void MainWindow::setController(Controller& controller)
@@ -40,11 +70,65 @@ void MainWindow::printResult(const QString &text)
   ui->teOut->setPlainText(text);
 }
 
+// ---------------------------------------------- button handlers ----------------------------------------------
+
 void MainWindow::bScanDirClick(){
-  prepareProcessing();
-  QHash<QString, QVariant> fields;
-  fields=Functions::getFieldsMap(ui);
-  m_controller->scanDir(fields);
+  if(!scanStarted){
+    scanStarted=true;
+    scanCanceled=false;
+    prepareProcessing();
+    QHash<QString, QVariant> fields;
+    fields=Functions::getFieldsMap(ui);
+    m_controller->scanDir(fields);
+  }
+  else{
+    m_controller->stopScan();
+    updateStatusBar("cancel");
+    scanStarted=false;
+    scanCanceled=true;
+  }
+}
+
+void MainWindow::bTreeViewerClick(){
+  qDebug("Tree Viewer");
+}
+
+void MainWindow::bBrowseClick(){
+  QString dir=path();
+  if(dir.length()==0) dir=QDir::currentPath();
+
+  QString dirname = QFileDialog::getExistingDirectory( 
+          this, tr("Select a Directory"), dir);
+  if( !dirname.isNull() )
+  {
+    setPath(dirname);
+  }
+}
+
+void MainWindow::bClearExcludeExtClick(){
+  ui->teExcludeExt->clear();
+}
+
+void MainWindow::bClearFilterDirClick(){
+  ui->teFilterDir->clear();
+}
+
+void MainWindow::bClearFilterExtClick(){
+  ui->teFilterExt->clear();
+}
+
+void MainWindow::bClearOutClick(){
+  ui->teOut->clear();
+}
+
+// ----------------------------------------------------------------------------------------------
+
+QString MainWindow::path(){
+  return ui->lePath->text();
+}
+
+void MainWindow::setPath(QString path){
+  ui->lePath->setText(path);
 }
 
 void MainWindow::prepareProcessing(){
@@ -92,7 +176,8 @@ void MainWindow::scanningFinished(int totalTime){
   Functions::log(ui, "Total time: "+time);
 
   Functions::setProgress(ui, 100);
-  updateStatusBar("finish", "", time);
+  if(!scanCanceled)
+    updateStatusBar("finish", "", time);
   ui->bScanDir->setText("Scan Directory");
 
 //  MainForm.startScan=true;

@@ -21,8 +21,6 @@ ScanDirectory::ScanDirectory() : QThread()
   prevTime=0;
   totalTime=0;
 
-  scanCanceled=false;
-
 //connect( this, SIGNAL(updateState(int)), this, SLOT(notifyObservers(int)) );
   connect( this, SIGNAL(updateState(QString, QString, int)), this, SLOT(notifyObservers(QString, QString, int)) );
   connect( this, SIGNAL(updateStatusBar(QString, QString)), this, SLOT(notifyUpdateStatusBar(QString, QString)) );
@@ -86,11 +84,17 @@ void ScanDirectory::startScan()
 
   prepareProcessing();
   start();
+  scanCanceled=false;
 
 //  jsonArray=fullScan(path);
 //  QJsonDocument doc(jsonArray);
 //  QByteArray byteArray=doc.toJson();
 //  json=QString(byteArray);
+}
+
+void ScanDirectory::stopScan()
+{
+  scanCanceled=true;
 }
 
 void ScanDirectory::run(){

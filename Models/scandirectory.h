@@ -45,6 +45,7 @@ public:
     void run();
     void registerObservers(QList<ModelObserver *> observers);
 
+    void stopScan();
 public slots:
     void notifyObservers(QString currentDir, QString timeString, int progress);
     void notifyUpdateStatusBar(QString type, QString currentDir);
@@ -58,6 +59,8 @@ private:
     const QString nl="\n";
     const QString pad="    ";
     const QString iconsPath="./lib/images/";
+
+    bool scanCanceled;
 
     QString path;       //??
 
@@ -81,8 +84,6 @@ private:
     long prevTime;
     int totalTime;
     QTime time;
-
-    bool scanCanceled;
 
     static QStringList exts;
     static QStringList imageExts;

@@ -14,7 +14,7 @@ Model::Model(QObject *parent) :
 
 void Model::startScan(const QHash<QString, QVariant> &fields)
 {
-  ScanDirectory *scandir=new ScanDirectory();
+  scandir=new ScanDirectory();
   scandir->init(fields);
   scandir->registerObservers(observers);
   scandir->startScan();
@@ -41,4 +41,8 @@ void Model::saveConfig(const QHash<QString, QVariant> &fields)
 
 void Model::registerObserver(ModelObserver *observer){
   observers.append(observer);
+}
+
+void Model::stopScan(){
+  scandir->stopScan();
 }

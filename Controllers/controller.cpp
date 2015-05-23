@@ -30,3 +30,7 @@ void Controller::scanDir(const QHash<QString, QVariant> &fields)
 {
   m_model.startScan(fields);
 }
+
+void Controller::stopScan(){
+  m_model.stopScan();
+}

@@ -29,16 +29,30 @@ public:
     void updateStatusBar(QString type, QString currentDir="", QString totalTime="");
     void scanningFinished(int totalTime);
     void loadConfig();
+    void addActions();
 private slots:
     void bScanDirClick();
+    void bTreeViewerClick();
+    void bBrowseClick();
+    
+    void bClearExcludeExtClick();
+    void bClearFilterDirClick();
+    void bClearFilterExtClick();
+    void bClearOutClick();
 
 private:
     const QString nl="\n";
+
+    bool scanStarted;
+    bool scanCanceled;
 
     Ui::MainWindow *ui;
     Controller* m_controller;
     Model &m_model;
     void prepareProcessing();
+    QString path();
+    void setPath(QString path);
+    void addShortcuts();
 };
 
 #endif // MAINWINDOW_H
