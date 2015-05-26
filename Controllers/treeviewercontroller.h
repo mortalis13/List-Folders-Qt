@@ -5,8 +5,7 @@
 #include <QJsonArray>
 #include "Models/treeviewermodel.h"
 #include "Views/treeviewer.h"
-// #include "Models/treemodel.h"
-// #include "Models/tnmodel.h"
+#include "Models/treemodel.h"
 
 class TreeViewer;
 
@@ -16,8 +15,6 @@ public:
   TreeViewerController(TreeViewer& view, TreeViewerModel &model);
   
   TreeModel *getTree(const QString& path);
-  void test();
-  // TNModel *getTree1(const QString &path);
 private:
   TreeViewer& m_view;
   TreeViewerModel& m_model;

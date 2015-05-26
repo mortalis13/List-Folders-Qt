@@ -15,16 +15,3 @@ TreeModel* TreeViewerController::getTree(const QString& path){
 
   return treeModel;
 }
-
-// TNModel* TreeViewerController::getTree1(const QString& path){
-//   qDebug("getTNTree()");
-
-//   TNModel* treeModel;
-//   treeModel=m_model.getTree1(path);
-
-//   return treeModel;
-// }
-
-void TreeViewerController::test(){
-  qDebug("test()");
-}

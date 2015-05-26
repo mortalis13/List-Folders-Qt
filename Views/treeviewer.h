@@ -7,9 +7,6 @@
 #include <Models/treeviewermodel.h>
 #include "Models/treemodel.h"
 
-#include "tn.h"
-#include "tnmodel.h"
-
 namespace Ui {
 class TreeViewer;
 }
@@ -25,8 +22,6 @@ public:
   ~TreeViewer();
   void setController(TreeViewerController &controller);
 
-  void bLoadTreeClick1();
-  void setTNModel();
 private slots:
   void bLoadTreeClick();
 
@@ -38,9 +33,6 @@ private:
   
   TreeViewerController *m_controller;
   TreeViewerModel &m_model;
-
-  void setObjectModel();
-  void setTestModel();
 };
 
 #endif // TREEVIEWER_H

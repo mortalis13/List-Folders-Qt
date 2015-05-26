@@ -7,13 +7,6 @@ Controller::Controller(MainWindow& view, Model& model) :
 {
 }
 
-void Controller::setText(const QString& text)
-{
-  QString res;
-  //    QString res=m_model.processText(text);
-  m_view.printResult(res);
-}
-
 QHash<QString, QVariant> Controller::loadConfig()
 {
   QHash<QString, QVariant> fields;

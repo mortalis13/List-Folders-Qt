@@ -9,9 +9,6 @@
 #include "Models/Tree/filenode.h"
 #include "Models/treemodel.h"
 
-// #include "Models/tn.h"
-// #include "Models/tnmodel.h"
-
 class ModelFunctions
 {
 public:
@@ -28,9 +25,6 @@ public:
     static DirNode *decodeTree(QString json);
     static TreeModel *getTreeModel(DirNode *root);
     
-    // static TNModel *getTreeModel1(TN *root);
-    // static TN *decodeTree1(QString json);
-    // static QList<TN *> *parseTree1(QJsonArray &array, TN *parent);
 private:
     static QList<TreeNode *> *parseTree(QJsonArray &array, DirNode *parent);
 };

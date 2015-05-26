@@ -1,7 +1,6 @@
 #include "Views/mainwindow.h"
 #include "Views/functions.h"
 #include "Views/treeviewer.h"
-#include "Views/dialog.h"
 #include "ui_mainwindow.h"
 #include "Models/modelobserver.h"
 #include <QFileDialog>

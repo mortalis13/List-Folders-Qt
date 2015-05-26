@@ -13,7 +13,6 @@ class Controller : public QObject
     Q_OBJECT
 public:
     explicit Controller(MainWindow& view, Model &model);
-    void setText(const QString& text);
     void scanDir(const QHash<QString, QVariant> &fields);
     void saveConfig(const QHash<QString, QVariant> &fields);
     QHash<QString, QVariant> loadConfig();
