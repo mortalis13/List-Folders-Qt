@@ -11,7 +11,6 @@
 #include "Models/modelobserver.h"
 
 ScanDirectory::ScanDirectory() : QThread()
-//ScanDirectory::ScanDirectory(QObject *parent) : QObject(parent), QThread()
 {
   text="";
   exportName="";
@@ -73,15 +72,11 @@ void ScanDirectory::init(const QHash<QString, QVariant> &fields){
 }
 
 void ScanDirectory::prepareProcessing(){
-//  prevTime=
   time.start();
 }
 
 void ScanDirectory::startScan()
 {
-//  ScanWorker worker;
-//  worker.start();
-
   prepareProcessing();
   start();
   scanCanceled=false;
@@ -153,11 +148,9 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
     json.append(jsonObject);
 
     if (level == 0) {
-      // logging
       dirCount++;
       int progress=(int) ((float) dirCount/rootDirCount*100);
       logStats(currentDir, progress);
-//      emit updateState(progress);
     }
   }
 

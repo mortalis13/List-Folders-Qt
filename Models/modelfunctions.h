@@ -4,6 +4,14 @@
 #include <QObject>
 #include <QRegExp>
 
+#include "Models/Tree/treenode.h"
+#include "Models/Tree/dirnode.h"
+#include "Models/Tree/filenode.h"
+#include "Models/treemodel.h"
+
+// #include "Models/tn.h"
+// #include "Models/tnmodel.h"
+
 class ModelFunctions
 {
 public:
@@ -17,6 +25,14 @@ public:
     static QString formatTime(int time, QString format);
     static QString encodeFields(const QHash<QString, QVariant> &fields);
     static QHash<QString, QVariant> decodeFields(QString json);
+    static DirNode *decodeTree(QString json);
+    static TreeModel *getTreeModel(DirNode *root);
+    
+    // static TNModel *getTreeModel1(TN *root);
+    // static TN *decodeTree1(QString json);
+    // static QList<TN *> *parseTree1(QJsonArray &array, TN *parent);
+private:
+    static QList<TreeNode *> *parseTree(QJsonArray &array, DirNode *parent);
 };
 
 #endif // MODELFUNCTIONS_H

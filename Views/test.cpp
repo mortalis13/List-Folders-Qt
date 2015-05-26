@@ -2,8 +2,5 @@
 
 Test::Test()
 {
-}
-
-void Test::test(){
-    int x=1;
+  children=new QList<Test*>();
 }

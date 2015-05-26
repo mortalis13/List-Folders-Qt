@@ -30,6 +30,7 @@ public:
     void scanningFinished(int totalTime);
     void loadConfig();
     void addActions();
+    
 private slots:
     void bScanDirClick();
     void bTreeViewerClick();

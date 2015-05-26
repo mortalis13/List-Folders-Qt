@@ -1,4 +1,8 @@
 #include "Models/modelfunctions.h"
+#include "Models/Tree/treenode.h"
+#include "Models/Tree/dirnode.h"
+#include "Models/Tree/filenode.h"
+#include "Models/treemodel.h"
 
 #include <QFile>
 #include <QVariant>
@@ -69,6 +73,17 @@ QString ModelFunctions::readFile(QString path) {
   return res;
 }
 
+void ModelFunctions::writeFile(QString path, QString text) {
+  QFile file(path);
+  
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    qWarning("Couldn't open file.");
+    return;
+  }
+  
+  file.write(text.toStdString().c_str());
+}
+
 QString ModelFunctions::formatTime(int time, QString format)
 {
   QString res;
@@ -111,13 +126,94 @@ QHash<QString, QVariant> ModelFunctions::decodeFields(QString json){
   return fields;
 }
 
-void ModelFunctions::writeFile(QString path, QString text) {
-  QFile file(path);
-  
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    qWarning("Couldn't open file.");
-    return;
+QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray &array, DirNode *parent){
+  QList<TreeNode*> *list=new QList<TreeNode*>();
+
+  foreach(QJsonValue val, array){
+    QJsonObject item=val.toObject();
+
+    QString text=item["text"].toString();
+    QString icon=item["icon"].toString();
+
+    if(item.contains("children")){
+      QJsonArray childrenArray=item["children"].toArray();
+      DirNode *dir=new DirNode(text);
+
+      QList<TreeNode*> *children=parseTree(childrenArray, dir);
+
+      dir->treeChildren=children;
+      dir->setParent(parent);
+      dir->icon=icon;
+
+      list->append(dir);
+    }
+    else{
+      FileNode *file=new FileNode(text, icon);
+      file->setParent(parent);
+      list->append(file);
+    }
   }
-  
-  file.write(text.toStdString().c_str());
+
+  return list;
 }
+
+DirNode* ModelFunctions::decodeTree(QString json){
+  QByteArray byteArray(qPrintable(json));
+  QJsonDocument doc(QJsonDocument::fromJson(byteArray));
+  QJsonArray array=doc.array();
+  
+  DirNode *root=new DirNode("root");
+  QList<TreeNode*> *tree=parseTree(array, root);
+  root->treeChildren=tree;
+
+  return root;
+}
+
+TreeModel* ModelFunctions::getTreeModel(DirNode* root){
+  TreeModel* treeModel=new TreeModel(root);
+  return treeModel;
+}
+
+
+// QList<TN*>* ModelFunctions::parseTree1(QJsonArray &array, TN *parent){
+//   QList<TN*> *list=new QList<TN*>();
+
+//   foreach(QJsonValue val, array){
+//     QJsonObject item=val.toObject();
+
+//     QString text=item["text"].toString();
+//     QString icon=item["icon"].toString();
+    
+//     TN *node=new TN();
+//     node->text=text;
+//     node->icon=icon;
+//     node->m_parent=parent;
+
+//     if(item.contains("children")){
+//       QJsonArray childrenArray=item["children"].toArray();
+//       QList<TN*> *children=parseTree1(childrenArray, node);
+//       node->m_children=children;
+//     }
+    
+//     list->append(node);
+//   }
+
+//   return list;
+// }
+
+// TN* ModelFunctions::decodeTree1(QString json){
+//   QByteArray byteArray(qPrintable(json));
+//   QJsonDocument doc(QJsonDocument::fromJson(byteArray));
+//   QJsonArray array=doc.array();
+  
+//   TN *root=new TN();
+//   QList<TN*> *tree=parseTree1(array, root);
+//   root->m_children=tree;
+
+//   return root;
+// }
+
+// TNModel* ModelFunctions::getTreeModel1(TN* root){
+//   TNModel* treeModel=new TNModel(root);
+//   return treeModel;
+// }

@@ -11,3 +11,8 @@ void FileNode::write(QJsonObject &json) const
     json["text"]=text;
     json["icon"]=icon;
 }
+
+void FileNode::setParent(DirNode *parent)
+{
+  m_parent=parent;
+}

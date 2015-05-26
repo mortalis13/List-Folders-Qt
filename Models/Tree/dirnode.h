@@ -7,12 +7,19 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+//class TreeNode;
+
 class DirNode:public TreeNode
 {
 public:
-    DirNode(QString text, QJsonArray children);
-    void write(QJsonObject &json) const;
-    QJsonArray children;
+  DirNode(QString text);
+  DirNode(QString text, QJsonArray children);
+  void setParent(DirNode* parent);
+  void write(QJsonObject &json) const;
+
+//  DirNode* m_parent;
+  QJsonArray children;
+  QList<TreeNode*>* treeChildren;
 };
 
 #endif // DIRNODE_H

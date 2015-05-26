@@ -1,5 +1,7 @@
 #include "Views/mainwindow.h"
 #include "Views/functions.h"
+#include "Views/treeviewer.h"
+#include "Views/dialog.h"
 #include "ui_mainwindow.h"
 #include "Models/modelobserver.h"
 #include <QFileDialog>
@@ -90,7 +92,12 @@ void MainWindow::bScanDirClick(){
 }
 
 void MainWindow::bTreeViewerClick(){
-  qDebug("Tree Viewer");
+  TreeViewerModel treeViewerModel;
+  TreeViewer *treeViewer=new TreeViewer(treeViewerModel, this);
+  TreeViewerController treeViewerController(*treeViewer, treeViewerModel);
+
+  treeViewer->setController(treeViewerController);
+  treeViewer->show();
 }
 
 void MainWindow::bBrowseClick(){
