@@ -22,8 +22,12 @@ public:
   ~TreeViewer();
   void setController(TreeViewerController &controller);
 
+  QString path();
+  void setPath(QString path);
 private slots:
   void bLoadTreeClick();
+  void bBrowseClick();
+  void treeClick(const QModelIndex &index);
 
 private:
   Ui::TreeViewer *ui;

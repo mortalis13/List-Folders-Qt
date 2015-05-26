@@ -173,3 +173,24 @@ TreeModel* ModelFunctions::getTreeModel(DirNode* root){
   TreeModel* treeModel=new TreeModel(root);
   return treeModel;
 }
+
+/*
+ * Returns file name from the full path of the JSON file
+ * the name is assigned to the root directory name
+ */
+QString ModelFunctions::getNameFromPath(QString path) {
+  QString name;
+  name = regexFind("/([^/]+)\\.[^.]+$", path);
+  return name;
+}
+
+/*
+ * Returns file name from the full path of the JSON file
+ * the name is assigned to the root directory name
+ */
+QString ModelFunctions::extractIconName(QString path) {
+  QString icon;
+  icon = regexFind("/([^/]+\\.[^/.]+)$", path);
+  if (icon.length()==0) icon = "file.png";
+  return icon;
+}

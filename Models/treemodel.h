@@ -21,7 +21,9 @@ public:
 
 private:
   DirNode *m_root;
-
+  QString iconsPath;
+  QList<QIcon> icons;
+  void prepareIcons();
 };
 
 #endif // TREEMODEL_H

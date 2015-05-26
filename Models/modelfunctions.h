@@ -25,6 +25,8 @@ public:
     static DirNode *decodeTree(QString json);
     static TreeModel *getTreeModel(DirNode *root);
     
+    static QString getNameFromPath(QString path);
+    static QString extractIconName(QString path);
 private:
     static QList<TreeNode *> *parseTree(QJsonArray &array, DirNode *parent);
 };

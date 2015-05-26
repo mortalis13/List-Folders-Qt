@@ -1,7 +1,15 @@
 #include "treemodel.h"
+#include <QIcon>
+#include "Models/modelfunctions.h"
 
 TreeModel::TreeModel(DirNode *root, QObject *parent) : QAbstractItemModel(parent){
   m_root = root;
+  iconsPath="lib/icons/";
+  prepareIcons();
+}
+
+void TreeModel::prepareIcons(){
+  icons.append(QIcon(iconsPath+"directory.png"));
 }
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const{
@@ -12,8 +20,18 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const{
   if( !index.isValid() )
     return QVariant();
 
-  if( role == Qt::DisplayRole ){
-      return static_cast<TreeNode*>( index.internalPointer() )->text;
+  if(TreeNode* item=static_cast<TreeNode*>( index.internalPointer() )){
+    if( role == Qt::DisplayRole ){
+      return item->text;
+    }
+
+    if (role == Qt::DecorationRole){
+      QString itemIconPath=item->icon;
+      QString iconName=ModelFunctions::extractIconName(itemIconPath);
+
+      QIcon icon(iconsPath+iconName);
+      return icon;
+    }
   }
   
   return QVariant();

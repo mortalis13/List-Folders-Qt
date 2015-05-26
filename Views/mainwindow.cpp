@@ -30,29 +30,29 @@ MainWindow::~MainWindow()
 
 void MainWindow::addActions()
 {
-  connect(ui->bScanDir, SIGNAL(clicked()), this, SLOT(bScanDirClick()));
-  connect(ui->bTreeViewer, SIGNAL(clicked()), this, SLOT(bTreeViewerClick()));
-  connect(ui->bBrowse, SIGNAL(clicked()), this, SLOT(bBrowseClick()));
+  connect( ui->bScanDir, SIGNAL(clicked()), this, SLOT(bScanDirClick()) );
+  connect( ui->bTreeViewer, SIGNAL(clicked()), this, SLOT(bTreeViewerClick()) );
+  connect( ui->bBrowse, SIGNAL(clicked()), this, SLOT(bBrowseClick()) );
 
-  connect(ui->bClearExcludeExt, SIGNAL(clicked()), this, SLOT(bClearExcludeExtClick()));
-  connect(ui->bClearFilterDir, SIGNAL(clicked()), this, SLOT(bClearFilterDirClick()));
-  connect(ui->bClearFilterExt, SIGNAL(clicked()), this, SLOT(bClearFilterExtClick()));
-  connect(ui->bClearOut, SIGNAL(clicked()), this, SLOT(bClearOutClick()));
+  connect( ui->bClearExcludeExt, SIGNAL(clicked()), this, SLOT(bClearExcludeExtClick()) );
+  connect( ui->bClearFilterDir, SIGNAL(clicked()), this, SLOT(bClearFilterDirClick()) );
+  connect( ui->bClearFilterExt, SIGNAL(clicked()), this, SLOT(bClearFilterExtClick()) );
+  connect( ui->bClearOut, SIGNAL(clicked()), this, SLOT(bClearOutClick()) );
 }
 
 void MainWindow::addShortcuts()
 {
   QShortcut *bScanDir=new QShortcut(QKeySequence("Ctrl+R"), this);
-  connect(bScanDir, SIGNAL(activated()), ui->bScanDir, SLOT(click()));
+  connect( bScanDir, SIGNAL(activated()), ui->bScanDir, SLOT(click()) );
 
   QShortcut *bBrowse=new QShortcut(QKeySequence("Ctrl+O"), this);
-  connect(bBrowse, SIGNAL(activated()), ui->bBrowse, SLOT(click()));
+  connect( bBrowse, SIGNAL(activated()), ui->bBrowse, SLOT(click()) );
 
   QShortcut *bTreeViewer=new QShortcut(QKeySequence("Ctrl+T"), this);
-  connect(bTreeViewer, SIGNAL(activated()), ui->bTreeViewer, SLOT(click()));
+  connect( bTreeViewer, SIGNAL(activated()), ui->bTreeViewer, SLOT(click()) );
 
   QShortcut *quit=new QShortcut(QKeySequence("Esc"), this);
-  connect(quit, SIGNAL(activated()), this, SLOT(close()));
+  connect( quit, SIGNAL(activated()), this, SLOT(close()) );
 }
 
 void MainWindow::setController(Controller& controller)
