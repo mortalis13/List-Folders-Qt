@@ -28,7 +28,7 @@ TreeModel* TreeViewerModel::getTreeModel(const QString& path)
   QString json;
 
   DirNode* root;
-  TreeModel* treeModel;
+  TreeModel* treeModel=NULL;
 
   json=ModelFunctions::readFile(path);
   root=ModelFunctions::decodeTree(json);

@@ -71,7 +71,7 @@ void TreeViewer::bLoadTreeClick()
    unloadTree();
 
    treeModel=m_controller->getTreeModel(treePath);
-//   ui->tree->setModel(treeModel);
+   ui->tree->setModel(treeModel);
 }
 
 void TreeViewer::bUnloadTreeClick()

@@ -131,12 +131,11 @@ QHash<QString, QVariant> ModelFunctions::decodeFields(QString json){
   return fields;
 }
 
-QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray &array, DirNode *parent){
+QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray array, DirNode *parent){
   QList<TreeNode*> *list=new QList<TreeNode*>();
 
   foreach(QJsonValue val, array){
     QJsonObject item=val.toObject();
-
     QString text=item["text"].toString();
     QString icon=item["icon"].toString();
 
@@ -162,7 +161,7 @@ QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray &array, DirNode *parent){
 }
 
 DirNode* ModelFunctions::decodeTree(QString json){
-//  QByteArray byteArray(qPrintable(json));
+  //  QByteArray byteArray(qPrintable(json));
   QByteArray byteArray( json.toUtf8() );
 
   QJsonParseError error;
@@ -178,7 +177,7 @@ DirNode* ModelFunctions::decodeTree(QString json){
   QList<TreeNode*> *tree=parseTree(array, root);
   root->treeChildren=tree;
 
-  qDebug() << "size: " << size;
+  // qDebug() << "size: " << size;
 
   return root;
 }

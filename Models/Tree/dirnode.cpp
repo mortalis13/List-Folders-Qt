@@ -2,7 +2,7 @@
 
 DirNode::DirNode(QString text) : TreeNode(text)
 {
-  treeChildren=new QList<TreeNode*>();
+//  treeChildren=new QList<TreeNode*>();
 //  m_parent=new TreeNode();
 //  children=new QJsonArray();
 }

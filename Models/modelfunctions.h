@@ -31,7 +31,7 @@ public:
     static int size;
 
 private:
-    static QList<TreeNode *> *parseTree(QJsonArray &array, DirNode *parent);
+    static QList<TreeNode *> *parseTree(QJsonArray array, DirNode *parent);
 
 };
 
