@@ -35,6 +35,7 @@ public slots:
     void notifyObservers(QString currentDir, QString timeString, int progress);
     void notifyUpdateStatusBar(QString type, QString currentDir);
     void notifyScanningFinished();
+    
 signals:
     void updateState(QString, QString, int);
     void updateStatusBar(QString, QString);

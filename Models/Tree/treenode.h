@@ -11,7 +11,7 @@ public:
     QString text;
     QString icon;
 
-    TreeNode* m_parent;
+    TreeNode* m_parent;               // needed for the tree view model
     
     virtual void f() {}               // for dynamic_cast (which requires source class to be polymorphic)
 };

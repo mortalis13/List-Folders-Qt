@@ -17,6 +17,10 @@ TreeModel* TreeViewerController::getTreeModel(const QString& path){
   return treeModel;
 }
 
+/*
+ * Unload tree model and tree structure (DirNode/FileNode nested objects) to free the memory 
+ * when a new tree is to be built or the TreeViewer window is closed
+ */
 void TreeViewerController::freeMemory(TreeModel *treeModel){
   m_model.freeMemory(treeModel);
 }

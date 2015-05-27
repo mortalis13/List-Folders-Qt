@@ -21,6 +21,9 @@ void Model::stopScan(){
   scandir->stopScan();
 }
 
+/*
+ * Returns fields map which is used by the view to fill the field values on the form
+ */
 QHash<QString, QVariant> Model::loadConfig()
 {
   QHash<QString, QVariant> fields;
@@ -33,6 +36,9 @@ QHash<QString, QVariant> Model::loadConfig()
   return fields;
 }
 
+/*
+ * Saves form fields to the database
+ */
 void Model::saveConfig(const QHash<QString, QVariant> &fields)
 {
   QString json=ModelFunctions::encodeFields(fields);
@@ -40,6 +46,9 @@ void Model::saveConfig(const QHash<QString, QVariant> &fields)
   db->closeConnection();               // edit place of closing DB
 }
 
+/*
+ * Registers view to get the model state messages
+ */
 void Model::registerObserver(ModelObserver *observer){
   observers.append(observer);
 }

@@ -3,6 +3,8 @@
 
 #include <QtCore>
 
+// helper class to notify the view about the model state changes
+
 class ModelObserver
 {
 public:

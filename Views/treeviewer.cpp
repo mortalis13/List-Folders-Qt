@@ -17,12 +17,12 @@ TreeViewer::TreeViewer(TreeViewerModel& model, QWidget *parent) :
   addActions();
   addShortcuts();
 
-  setAttribute(Qt::WA_DeleteOnClose);
+  setAttribute(Qt::WA_DeleteOnClose);             // free memory on window close
 }
 
 TreeViewer::~TreeViewer()
 {
-  unloadTree();
+  unloadTree();                                   // free tree view memory (frees it partially (some leaks may be present))
   delete ui;
   
   qDebug() << "Destroy TreeViewer";
@@ -56,6 +56,11 @@ void TreeViewer::addShortcuts()
 
 // ---------------------------------------------- button handlers ----------------------------------------------
 
+/*
+ * Gets the TreeModel pointer from the model
+ * And assigns the model to the QTreeView widget
+ * This shows the tree structure in the window
+ */
 void TreeViewer::bLoadTreeClick()
 {
    QString treePath=path();
@@ -69,6 +74,9 @@ void TreeViewer::bLoadTreeClick()
    ui->tree->setModel(treeModel);
 }
 
+/*
+ * Opens browse dialog to select a JSON file with tree structure
+ */
 void TreeViewer::bBrowseClick(){
   QString dir=path();
   if(dir.length()==0) dir="export/tree/json";
@@ -82,6 +90,9 @@ void TreeViewer::bBrowseClick(){
   }
 }
 
+/*
+ * Expans/collapses tree nodes on single click
+ */
 void TreeViewer::treeClick(const QModelIndex &index){
   QTreeView* tree=ui->tree;
   if(tree->isExpanded(index))
@@ -100,6 +111,9 @@ void TreeViewer::setPath(QString path){
   ui->lePath->setText(path);
 }
 
+/*
+ * Removes tree model and tree structure objects from the memory
+ */
 void TreeViewer::unloadTree(){
   if(treeModel!=NULL){
     m_controller->freeMemory(treeModel);

@@ -15,18 +15,21 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const{
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
+/*
+ * Returns text to display and icons for tree nodes
+ */
 QVariant TreeModel::data(const QModelIndex &index, int role) const{
   if( !index.isValid() )
     return QVariant();
 
   if(TreeNode* item=static_cast<TreeNode*>( index.internalPointer() )){
-    if( role == Qt::DisplayRole ){
+    if( role == Qt::DisplayRole ){                                         // text
       return item->text;
     }
 
-    if (role == Qt::DecorationRole){
+    if (role == Qt::DecorationRole){                                       // icon
       QString itemIconPath=item->icon;
-      QString iconName=ModelFunctions::extractIconName(itemIconPath);
+      QString iconName=ModelFunctions::extractIconName(itemIconPath);       // get the icon name ('music' from 'lib/images/music.png')
 
       QIcon icon(iconsPath+iconName);
       return icon;
@@ -34,25 +37,6 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const{
   }
   
   return QVariant();
-}
-
-int TreeModel::rowCount(const QModelIndex &parent) const{
-  DirNode *parentObject;
-
-  if( !parent.isValid() )
-    parentObject = m_root;
-  else{
-    TreeNode* temp = static_cast<TreeNode*>( parent.internalPointer() );
-    parentObject = dynamic_cast<DirNode*>(temp);
-    if(!parentObject)
-      return 0;
-  }
-
-  return parentObject->treeChildren->size();
-}
-
-int TreeModel::columnCount(const QModelIndex &parent) const{
-  return 1;
 }
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const{
@@ -63,7 +47,7 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
   else{
     TreeNode* temp = static_cast<TreeNode*>( parent.internalPointer() );
     parentObject = dynamic_cast<DirNode*>(temp);
-    if(!parentObject)
+    if(!parentObject)                                                           // if not DirNode (FileNode doesn't have 'treeChildren')
       parentObject = m_root;
   }
 
@@ -90,6 +74,25 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const{
     return QModelIndex();
     
   return createIndex( grandParentObject->treeChildren->indexOf( parentObject ), 0, parentObject );
+}
+
+int TreeModel::rowCount(const QModelIndex &parent) const{
+  DirNode *parentObject;
+
+  if( !parent.isValid() )
+    parentObject = m_root;
+  else{
+    TreeNode* temp = static_cast<TreeNode*>( parent.internalPointer() );
+    parentObject = dynamic_cast<DirNode*>(temp);                              // dynamic cast to distinguish DirNode from FileNode
+    if(!parentObject)
+      return 0;
+  }
+
+  return parentObject->treeChildren->size();
+}
+
+int TreeModel::columnCount(const QModelIndex &parent) const{
+  return 1;
 }
 
 // ------------------------------------------- custom -------------------------------------------

@@ -2,7 +2,7 @@
 
 DirNode::DirNode(QString text) : TreeNode(text)
 {
-  treeChildren=NULL;
+  treeChildren=NULL;                            // init the pointer to prevent crashes on destroying the object
 }
 
 DirNode::DirNode(QString text, QJsonArray children) : TreeNode(text)

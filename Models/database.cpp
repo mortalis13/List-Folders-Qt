@@ -9,6 +9,10 @@ Database::Database()
   initDatabase();
 }
 
+/*
+ * Connects to the local .db file (SQLite database)
+ * if no file then creates it
+ */
 bool Database::createConnection(){
   db = QSqlDatabase::addDatabase( "QSQLITE" );
   db.setDatabaseName( "config.db" );
@@ -24,6 +28,13 @@ bool Database::createConnection(){
   return true;
 }
 
+void Database::closeConnection(){
+  db.close();
+}
+
+/*
+ * Creates tables in the database if they don't exist
+ */
 void Database::initDatabase(){
   if(!connected) return;
 
@@ -40,10 +51,9 @@ void Database::initDatabase(){
   }
 }
 
-void Database::closeConnection(){
-  db.close();
-}
-
+/*
+ * Checks if "name" exists in the table
+ */
 bool Database::exists(QString table, QString name){
   QString sql = "select count(*) from " + table + " where name=:name";
   
@@ -63,6 +73,9 @@ bool Database::exists(QString table, QString name){
   return false;
 }
 
+/*
+ * General update method for 'config' and 'options' tables
+ */
 void Database::updateOption(QString name, QString value, QString dbtable){
   if (!connected) return;
 
@@ -84,6 +97,10 @@ void Database::updateOption(QString name, QString value, QString dbtable){
     qDebug() << "updateOption() success";
 }
 
+/*
+ * Adds or updates last option in the 'config' table
+ * Redirects to the updateOption()
+ */
 void Database::updateConfig(QString name, QString value)
 {
   updateOption(name, value, config_table);

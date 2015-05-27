@@ -36,6 +36,9 @@ QHash<QString, QVariant> Functions::getFieldsMap(Ui::MainWindow* ui) {
     return dict;
 }
 
+/*
+ * Assigns values from the 'fields' map to the form fields
+ */
 void Functions::loadConfig(Ui::MainWindow* ui, const QHash<QString, QVariant> &fields)
 {
   ui->lePath->setText(fields["path"].toString());
@@ -48,6 +51,9 @@ void Functions::loadConfig(Ui::MainWindow* ui, const QHash<QString, QVariant> &f
   ui->leExportName->setText(fields["exportName"].toString());
 }
 
+/*
+ * Sets progress bar value
+ */
 void Functions::setProgress(Ui::MainWindow* ui, int progress){
   ui->progressBar->setValue(progress);
 }
@@ -60,6 +66,9 @@ void Functions::clearLog(Ui::MainWindow* ui){
   ui->teOut->clear();
 }
 
+/*
+ * Returns the string with time converted to milliseconds and in the specified format
+ */
 QString Functions::formatTime(int time, QString format)
 {
   QString res;

@@ -19,7 +19,7 @@ public:
   void freeMemory(TreeModel* treeModel);
   
 private:
-  TreeViewer& m_view;
+  TreeViewer& m_view;     // references to the view and model
   TreeViewerModel& m_model;
   
 };

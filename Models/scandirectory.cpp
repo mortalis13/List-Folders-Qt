@@ -53,6 +53,9 @@ QStringList ScanDirectory::codeExts ={
   "c", "cpp", "cs", "java",
 };
 
+/*
+ * Assigns all the needed form fields to the variables
+ */
 void ScanDirectory::init(const QHash<QString, QVariant> &fields){
   QString filterExtText, excludeExtText, filterDirText;
 
@@ -88,6 +91,10 @@ void ScanDirectory::stopScan()
   scanCanceled=true;
 }
 
+/*
+ * Scans the directory and converts tree structure to the JSON string
+ * The QThread runner (which is overridden method)
+ */
 void ScanDirectory::run(){
   jsonArray=fullScan(path);
   
@@ -106,6 +113,10 @@ void ScanDirectory::done(){
   emit scanningFinished();
 }
 
+/*
+ * Recursively scans all subdirectories
+ * using two cycles for directories and files
+ */
 QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 {
   if(scanCanceled) return QJsonArray();
@@ -113,10 +124,10 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
   QString pad;
   QJsonArray json, res;
 
-  QDir qdir=QDir(dir);
+  QDir qdir=QDir(dir);                              // get all dir/files list
   pad=getPadding(level);
 
-  qdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  qdir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);        // only directories
   QFileInfoList dirList=qdir.entryInfoList();
   if (level == 0) {
     rootDirCount = getDirCount(dirList.size());
@@ -132,24 +143,24 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
     }
 
     if(doExportText)
-      text+=pad+currentDir+nl;
+      text+=pad+currentDir+nl;                              // accumulate text structure
 
-    res=fullScan(nextDir.absoluteFilePath(), level+1);
+    res=fullScan(nextDir.absoluteFilePath(), level+1);      // recursive point
     if(scanCanceled) return QJsonArray();
 
     QJsonObject jsonObject;
     DirNode node(name, res);
     node.write(jsonObject);
-    json.append(jsonObject);
+    json.append(jsonObject);                                 // accumulate recursive tree structure
 
     if (level == 0) {
       dirCount++;
-      int progress=(int) ((float) dirCount/rootDirCount*100);
-      logStats(currentDir, progress);
+      int progress=(int) ((float) dirCount/rootDirCount*100);     // use fraction of currently scanned top-level directories to total number of directories
+      logStats(currentDir, progress);                             // update progress status for scanned top-level directories
     }
   }
 
-  qdir.setFilter(QDir::Files);
+  qdir.setFilter(QDir::Files);                                // only files
   foreach(QFileInfo nextFile, qdir.entryInfoList()){
     QString name=nextFile.fileName();
     if(!filterFile(name)) continue;
@@ -161,7 +172,7 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
     QJsonObject jsonObject;
     FileNode node(name, getIcon(name));
     node.write(jsonObject);
-    json.append(jsonObject);
+    json.append(jsonObject);                                 // accumulate recursive tree structure (files)
   }
 
   return json;
@@ -169,12 +180,15 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 
 // --------------------------------------------------- logging ---------------------------------------------------
 
+/*
+ * Calculates and outputs time between folders processing
+ */
 int ScanDirectory::logStats(QString currentDir, int progress){
-  int timeDiff=time.elapsed();
+  int timeDiff=time.elapsed();                                    // use QTime methods to get time intervals
   totalTime+=timeDiff;
 
   QString timeString=ModelFunctions::formatTime(timeDiff, "Time: %.2f s ");
-  emit updateState(currentDir, timeString, progress);
+  emit updateState(currentDir, timeString, progress);                           // send signal to the view about the state change
   time.restart();
 }
 
@@ -182,7 +196,7 @@ int ScanDirectory::logStats(QString currentDir, int progress){
  * Gets top-level count of directories to be scanned
  */
 int ScanDirectory::getDirCount(int totalCount){
-  int filteredCount=filterDir.size();
+  int filteredCount=filterDir.size();                   // total count will equal the filtered directories count if present
   if(filteredCount==0) return totalCount;
   return filteredCount;
 }
@@ -208,12 +222,18 @@ QString ScanDirectory::getPadding(int level){
   return resPad;
 }
 
+/*
+ * Returns the text format of the scanned structure
+ */
 QString ScanDirectory::getText(){
   if(text.trimmed().length()==0)
     text="No Data";
   return text;
 }
 
+/*
+ * Returns the JSON string of the scanned structure
+ */
 QString ScanDirectory::getJson(){
   return json;
 }
@@ -458,21 +478,33 @@ QString ScanDirectory::getExportName(QString ext){
 
 // --------------------------------------------------- service ---------------------------------------------------
 
+/*
+ * Add observers from the main model (which gets them from the view objects)
+ */
 void ScanDirectory::registerObservers(QList<ModelObserver *> observers){
   this->observers=observers;
 }
 
+/*
+ * Call the observers' (views) methods to update the UI
+ */
 void ScanDirectory::notifyObservers(QString currentDir, QString timeString, int progress){
   foreach(ModelObserver *observer, observers)
     observer->updateState(currentDir, timeString, progress, dirCount, rootDirCount);
 }
 
+/*
+ * Another change state signal for the status bar
+ */
 void ScanDirectory::notifyUpdateStatusBar(QString type, QString currentDir)
 {
   foreach(ModelObserver *observer, observers)
     observer->updateStatusBar(type, currentDir);
 }
 
+/*
+ * Notify about the scanning is finished or canceled
+ */
 void ScanDirectory::notifyScanningFinished()
 {
   foreach(ModelObserver *observer, observers)
