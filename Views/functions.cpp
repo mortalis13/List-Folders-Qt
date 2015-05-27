@@ -4,7 +4,6 @@
 Functions::Functions(QObject *parent) :
     QObject(parent)
 {
-
 }
 
 /*

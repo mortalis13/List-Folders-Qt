@@ -12,13 +12,14 @@ public:
   QString loadLastOptions();
   QString getOption(QString name);
   void closeConnection();
+  
 private:
+  bool connected;
+  
   QString options_table="options";
   QString config_table="config";
   QString table;
   QString sql;
-  
-  bool connected;
     
   QSqlDatabase db;  
   QSqlQuery query;

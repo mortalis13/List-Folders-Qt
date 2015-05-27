@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>_Title_</title>
+  
+  <style>
+    html { 
+      margin:0; 
+      padding:0; 
+      font-size:62.5%; 
+    }
+    body { 
+      max-width:90%px; 
+      min-width:300px; 
+      margin:0 auto; 
+      padding:20px 10px; 
+      font-size:14px; 
+      font-size:1.4em; 
+    }
+    h1 { 
+      font-size:1.8em; 
+    }
+    
+    .container {
+      margin: 0 1em;
+    }
+    
+    #tree {
+      overflow:auto; 
+      border:1px solid #aaa; 
+      min-height:300px;
+      padding: 1em;
+    }
+    .controls{
+      margin-bottom:1em;
+    }
+    .controls button{
+      height:40px;
+    }
+    .folder-path h2{
+      margin-top: 0;
+    }
+    .filters{
+      font-size: 1.1em;
+    }
+  </style>
+  
+  <link rel="stylesheet" href="lib/css/style.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="lib/favicon.ico">
+</head>
+<body>
+  <div class="container">
+    <div class="folder-path">
+      <h2>_FolderPath_</h2>
+      <pre class="filters">_Filters_</pre>
+    </div>
+    
+    <div class="controls">
+      <button id="expand" autofocus>Expand All</button>
+      <button id="collapse">Collapse All</button>
+    </div>
+    
+    <div id="tree"></div>
+  </div>
+
+  <script src="lib/js/jquery.min.js"></script>
+  <script src="lib/js/jstree.js"></script>
+  
+  <script>
+    var tree="#tree"
+  
+    $('#expand').click(function(){
+      $(tree).jstree().open_all()
+    })
+    $('#collapse').click(function(){
+      $(tree).jstree().close_all()
+    })
+  
+    $(tree).jstree({
+      'core' : {
+        'data' : {
+          "url":"_jsonPath_",
+          "dataType":"json"
+        },
+        'dblclick_toggle':false,
+        
+        // "plugins" : [ "wholerow" ]
+        // "themes" : {
+        //   "variant" : "large"
+        // },
+      },
+    })
+    .on("click.jstree", ".jstree-anchor", function (e) {
+      $(this).jstree().toggle_node(e.target);
+    })
+  </script>
+</body>
+</html>

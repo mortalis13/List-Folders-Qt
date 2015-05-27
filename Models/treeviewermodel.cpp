@@ -1,27 +1,9 @@
 #include "treeviewermodel.h"
+
 #include <QJsonArray>
 #include <QDebug>
+
 #include "Models/modelfunctions.h"
-
-TreeViewerModel::TreeViewerModel()
-{
-}
-
-void TreeViewerModel::showTree(DirNode *root)
-{
-  QList<TreeNode*> list=*(root->treeChildren);
-
-  foreach(TreeNode* item, list){
-    DirNode *d=dynamic_cast<DirNode*>(item);
-    if(d){
-      qDebug() << "Dir: " << item->text;
-      showTree(d);
-    }
-    else{
-      qDebug() << "  File: " << item->text;
-    }
-  }
-}
 
 TreeModel* TreeViewerModel::getTreeModel(const QString& path)
 {
@@ -58,10 +40,26 @@ void TreeViewerModel::deleteTree(DirNode* parent){
 }
 
 void TreeViewerModel::freeMemory(TreeModel *treeModel){
-  qDebug() << "  == Unloading Tree ==";
+  qDebug() << "== Unloading Tree ==";
 
   DirNode* root=treeModel->getRoot();
   deleteTree(root);
   delete root;
   delete treeModel;
+}
+
+void TreeViewerModel::showTree(DirNode *root)
+{
+  QList<TreeNode*> list=*(root->treeChildren);
+
+  foreach(TreeNode* item, list){
+    DirNode *d=dynamic_cast<DirNode*>(item);
+    if(d){
+      qDebug() << "Dir: " << item->text;
+      showTree(d);
+    }
+    else{
+      qDebug() << "  File: " << item->text;
+    }
+  }
 }

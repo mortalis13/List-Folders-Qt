@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 
-#include <Controllers/controller.h>
-#include <Models/model.h>
+#include "Controllers/controller.h"
+#include "Models/model.h"
 #include "Models/modelobserver.h"
 
 namespace Ui {
@@ -21,15 +21,17 @@ class MainWindow : public QMainWindow, public ModelObserver
 public:
     explicit MainWindow(Model& model, QWidget *parent = 0);
     ~MainWindow();
-    void setController(Controller& controller);
-    void printResult(const QString& text);
-    void init();
-//    void updateState(int progress);
+    
+    void loadConfig();
     void updateState(QString currentDir, QString timeString, int progress, int dirCount, int rootDirCount);
     void updateStatusBar(QString type, QString currentDir="", QString totalTime="");
     void scanningFinished(int totalTime);
-    void loadConfig();
-    void addActions();
+    void init();
+    
+    void setController(Controller& controller);
+    void printResult(const QString& text);
+    QString path();
+    void setPath(QString path);
     
 private slots:
     void bScanDirClick();
@@ -50,10 +52,10 @@ private:
     Ui::MainWindow *ui;
     Controller* m_controller;
     Model &m_model;
-    void prepareProcessing();
-    QString path();
-    void setPath(QString path);
+    
+    void addActions();
     void addShortcuts();
+    void prepareProcessing();
 };
 
 #endif // MAINWINDOW_H

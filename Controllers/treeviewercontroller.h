@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QJsonArray>
+
 #include "Models/treeviewermodel.h"
 #include "Views/treeviewer.h"
 #include "Models/treemodel.h"
@@ -16,6 +17,7 @@ public:
   
   TreeModel *getTreeModel(const QString& path);
   void freeMemory(TreeModel* treeModel);
+  
 private:
   TreeViewer& m_view;
   TreeViewerModel& m_model;

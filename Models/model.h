@@ -6,20 +6,17 @@
 #include "Models/modelobserver.h"
 #include "Models/database.h"
 
-class Model : public QObject
+class Model
 {
-    Q_OBJECT
 public:
-    explicit Model(QObject *parent = 0);
+    explicit Model();
+    
     void startScan(const QHash<QString, QVariant> &fields);
-    QString processText(const QString& text);
-    void registerObserver(ModelObserver *observer);
+    void stopScan();
+    
     void saveConfig(const QHash<QString, QVariant> &fields);
     QHash<QString, QVariant> loadConfig();
-    void stopScan();
-signals:
-
-public slots:
+    void registerObserver(ModelObserver *observer);
 
 private:
     QList<ModelObserver*> observers;

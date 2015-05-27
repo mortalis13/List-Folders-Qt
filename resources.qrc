@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/root">
+        <file>Exports/icons/icon.ico</file>
+        <file>Exports/icons/icon16.png</file>
+        <file>Exports/icons/icon32.png</file>
+        <file>Exports/icons/16.png</file>
+        <file>Exports/icons/24.png</file>
+        <file>Exports/icons/32.png</file>
+        <file>Exports/icons/48.png</file>
+    </qresource>
+</RCC>

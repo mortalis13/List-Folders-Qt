@@ -1,7 +1,6 @@
 #include "controller.h"
 
 Controller::Controller(MainWindow& view, Model& model) :
-  QObject(0),
   m_view(view),
   m_model(model)
 {

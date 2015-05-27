@@ -1,32 +1,20 @@
 #include "Models/modelfunctions.h"
+
+#include <QDebug>
+#include <QFile>
+#include <QVariant>
+#include <QHash>
+#include <QRegExp>
+
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
+
 #include "Models/Tree/treenode.h"
 #include "Models/Tree/dirnode.h"
 #include "Models/Tree/filenode.h"
 #include "Models/treemodel.h"
-
-#include <QFile>
-#include <QVariant>
-#include <QHash>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonDocument>
-
-#include <QJsonParseError>
-#include <QDebug>
-
-ModelFunctions::ModelFunctions()
-{
-}
-
-int ModelFunctions::size=0;
-
-bool ModelFunctions::matches(QString regex, QString text)
-{
-    QRegExp rx(regex);
-    if(rx.indexIn(text)!=-1)
-        return true;
-    return false;
-}
 
 // ----------------------------------------------------- strings -----------------------------------------------------
 
@@ -45,6 +33,25 @@ QString ModelFunctions::formatPath(QString path){
 QString ModelFunctions::getPath(QString path) {
   // return Application.StartupPath + "\\" + path;
   return path;
+}
+
+/*
+ * Returns file name from the full path of the JSON file
+ * the name is assigned to the root directory name
+ */
+QString ModelFunctions::extractIconName(QString path) {
+  QString icon;
+  icon = regexFind("/([^/]+\\.[^/.]+)$", path);
+  if (icon.length()==0) icon = "file.png";
+  return icon;
+}
+
+bool ModelFunctions::matches(QString regex, QString text)
+{
+    QRegExp rx(regex);
+    if(rx.indexIn(text)!=-1)
+        return true;
+    return false;
 }
 
 /*
@@ -89,11 +96,15 @@ void ModelFunctions::writeFile(QString path, QString text) {
   file.write(text.toStdString().c_str());
 }
 
+// ----------------------------------------------------- logging -----------------------------------------------------
+
 QString ModelFunctions::formatTime(int time, QString format)
 {
   QString res;
   return res.sprintf(qPrintable(format), (float)time / 1000);
 }
+
+// ----------------------------------------------------- Fields JSON serialization -----------------------------------------------------
 
 QString ModelFunctions::encodeFields(const QHash<QString, QVariant> &fields)
 {
@@ -131,6 +142,26 @@ QHash<QString, QVariant> ModelFunctions::decodeFields(QString json){
   return fields;
 }
 
+// ----------------------------------------------------- Tree JSON serialization -----------------------------------------------------
+
+DirNode* ModelFunctions::decodeTree(QString json){
+  QByteArray byteArray(json.toUtf8());
+
+  QJsonParseError error;
+  QJsonDocument doc( QJsonDocument::fromJson(byteArray, &error) );
+
+  if(error.error)
+    qDebug() << "QJsonDocument error: " << error.errorString();
+
+  QJsonArray array=doc.array();
+
+  DirNode *root=new DirNode("root");
+  QList<TreeNode*> *tree=parseTree(array, root);
+  root->treeChildren=tree;
+
+  return root;
+}
+
 QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray array, DirNode *parent){
   QList<TreeNode*> *list=new QList<TreeNode*>();
 
@@ -160,50 +191,7 @@ QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray array, DirNode *parent){
   return list;
 }
 
-DirNode* ModelFunctions::decodeTree(QString json){
-  //  QByteArray byteArray(qPrintable(json));
-  QByteArray byteArray( json.toUtf8() );
-
-  QJsonParseError error;
-  QJsonDocument doc( QJsonDocument::fromJson(byteArray, &error) );
-
-  if(error.error)
-    qDebug() << "QJsonDocument error: " << error.errorString();
-
-  QJsonArray array=doc.array();
-  qDebug() << "QJsonArray size: " << array.size();
-
-  DirNode *root=new DirNode("root");
-  QList<TreeNode*> *tree=parseTree(array, root);
-  root->treeChildren=tree;
-
-  // qDebug() << "size: " << size;
-
-  return root;
-}
-
 TreeModel* ModelFunctions::getTreeModel(DirNode* root){
   TreeModel* treeModel=new TreeModel(root);
   return treeModel;
-}
-
-/*
- * Returns file name from the full path of the JSON file
- * the name is assigned to the root directory name
- */
-QString ModelFunctions::getNameFromPath(QString path) {
-  QString name;
-  name = regexFind("/([^/]+)\\.[^.]+$", path);
-  return name;
-}
-
-/*
- * Returns file name from the full path of the JSON file
- * the name is assigned to the root directory name
- */
-QString ModelFunctions::extractIconName(QString path) {
-  QString icon;
-  icon = regexFind("/([^/]+\\.[^/.]+)$", path);
-  if (icon.length()==0) icon = "file.png";
-  return icon;
 }

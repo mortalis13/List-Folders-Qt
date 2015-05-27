@@ -1,10 +1,12 @@
 #include "Views/mainwindow.h"
-#include "Views/functions.h"
-#include "Views/treeviewer.h"
 #include "ui_mainwindow.h"
-#include "Models/modelobserver.h"
+
 #include <QFileDialog>
 #include <QShortcut>
+
+#include "Views/functions.h"
+#include "Views/treeviewer.h"
+#include "Models/modelobserver.h"
 
 MainWindow::MainWindow(Model &model, QWidget *parent) :
   QMainWindow(parent),
@@ -12,8 +14,10 @@ MainWindow::MainWindow(Model &model, QWidget *parent) :
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+  
   scanStarted=false;
   scanCanceled=false;
+  
   addActions();
   addShortcuts();
   model.registerObserver(this);
@@ -55,20 +59,10 @@ void MainWindow::addShortcuts()
   connect( quit, SIGNAL(activated()), this, SLOT(close()) );
 }
 
-void MainWindow::setController(Controller& controller)
-{
-  m_controller=&controller;
-}
-
 void MainWindow::loadConfig(){
   QHash<QString, QVariant> fields;
   fields=m_controller->loadConfig();
-//  Functions::loadConfig(ui, fields);
-}
-
-void MainWindow::printResult(const QString &text)
-{
-  ui->teOut->setPlainText(text);
+  Functions::loadConfig(ui, fields);
 }
 
 // ---------------------------------------------- button handlers ----------------------------------------------
@@ -78,6 +72,7 @@ void MainWindow::bScanDirClick(){
     scanStarted=true;
     scanCanceled=false;
     prepareProcessing();
+    
     QHash<QString, QVariant> fields;
     fields=Functions::getFieldsMap(ui);
     m_controller->scanDir(fields);
@@ -103,8 +98,7 @@ void MainWindow::bBrowseClick(){
   QString dir=path();
   if(dir.length()==0) dir=QDir::currentPath();
 
-  QString dirname = QFileDialog::getExistingDirectory( 
-          this, tr("Select a Directory"), dir);
+  QString dirname = QFileDialog::getExistingDirectory(this, tr("Select a Directory"), dir);
   if( !dirname.isNull() )
   {
     setPath(dirname);
@@ -127,7 +121,7 @@ void MainWindow::bClearOutClick(){
   ui->teOut->clear();
 }
 
-// ----------------------------------------------------------------------------------------------
+// --------------------------------------------- helpers ---------------------------------------------
 
 QString MainWindow::path(){
   return ui->lePath->text();
@@ -148,6 +142,8 @@ void MainWindow::init(){
   ui->lePath->setText(path);
   ui->chExportText->setChecked(true);
 }
+
+// --------------------------------------------- state ---------------------------------------------
 
 void MainWindow::updateState(QString currentDir, QString timeString, int progress, int dirCount, int rootDirCount)
 {
@@ -177,6 +173,8 @@ void MainWindow::updateStatusBar(QString type, QString currentDir, QString total
 }
 
 void MainWindow::scanningFinished(int totalTime){
+  scanStarted=false;
+  
   Functions::log(ui, "----------------------------");
   QString time=Functions::formatTime(totalTime, "%.2f s");
   Functions::log(ui, "Total time: "+time);
@@ -185,6 +183,16 @@ void MainWindow::scanningFinished(int totalTime){
   if(!scanCanceled)
     updateStatusBar("finish", "", time);
   ui->bScanDir->setText("Scan Directory");
+}
 
-//  MainForm.startScan=true;
+// -------------------------------------------- service --------------------------------------------
+
+void MainWindow::setController(Controller& controller)
+{
+  m_controller=&controller;
+}
+
+void MainWindow::printResult(const QString &text)
+{
+  ui->teOut->setPlainText(text);
 }

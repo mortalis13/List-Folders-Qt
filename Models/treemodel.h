@@ -2,9 +2,8 @@
 #define TREEMODEL_H
 
 #include <QAbstractItemModel>
+
 #include "Models/Tree/dirnode.h"
-#include "Models/Tree/treenode.h"
-#include "Models/Tree/filenode.h"
 
 class TreeModel : public QAbstractItemModel
 {
@@ -20,10 +19,11 @@ public:
   QModelIndex parent( const QModelIndex &index ) const;
 
   DirNode *getRoot();
+  
 private:
   DirNode *m_root;
   QString iconsPath;
-//  QList<QIcon> icons;
+  
   void prepareIcons();
 };
 

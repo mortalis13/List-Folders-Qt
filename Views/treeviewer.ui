@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Tree Viewer</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/root/Exports/icons/icon.ico</normaloff>:/root/Exports/icons/icon.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="bottomMargin">
@@ -106,17 +110,12 @@
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QPushButton" name="bUnloadTree">
-      <property name="text">
-       <string>Unload Tree</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

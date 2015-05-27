@@ -20,27 +20,27 @@ class TreeViewer : public QMainWindow
 public:
   explicit TreeViewer(TreeViewerModel& model, QWidget *parent = 0);
   ~TreeViewer();
-  void setController(TreeViewerController &controller);
-
+  
   QString path();
   void setPath(QString path);
+  void setController(TreeViewerController &controller);
+  
+private:
+  Ui::TreeViewer *ui;
+  TreeViewerController *m_controller;
+  TreeViewerModel &m_model;
+  TreeModel* treeModel;
+  
+  void init();
+  void addActions();
+  void addShortcuts();
+  void unloadTree();
+  
 private slots:
   void bLoadTreeClick();
   void bBrowseClick();
   void treeClick(const QModelIndex &index);
-
-  void bUnloadTreeClick();
-private:
-  Ui::TreeViewer *ui;
-  void init();
-  void addActions();
-  void addShortcuts();
   
-  TreeViewerController *m_controller;
-  TreeViewerModel &m_model;
-
-  TreeModel* treeModel;
-  void unloadTree();
 };
 
 #endif // TREEVIEWER_H

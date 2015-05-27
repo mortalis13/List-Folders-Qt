@@ -1,20 +1,15 @@
 #include "treemodel.h"
+
 #include <QIcon>
+
 #include "Models/modelfunctions.h"
 
 TreeModel::TreeModel(DirNode *root, QObject *parent) : QAbstractItemModel(parent){
   m_root = root;
   iconsPath="lib/icons/";
-//  prepareIcons();
 }
 
-DirNode* TreeModel::getRoot(){
-  return m_root;
-}
-
-void TreeModel::prepareIcons(){
-//  icons.append(QIcon(iconsPath+"directory.png"));
-}
+// ------------------------------------------- overridden -------------------------------------------
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const{
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -95,4 +90,14 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const{
     return QModelIndex();
     
   return createIndex( grandParentObject->treeChildren->indexOf( parentObject ), 0, parentObject );
+}
+
+// ------------------------------------------- custom -------------------------------------------
+
+DirNode* TreeModel::getRoot(){
+  return m_root;
+}
+
+void TreeModel::prepareIcons(){
+//  icons.append(QIcon(iconsPath+"directory.png"));
 }

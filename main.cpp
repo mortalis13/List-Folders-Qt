@@ -1,7 +1,8 @@
-#include "Views/mainwindow.h"
-#include <Controllers/controller.h>
-#include <Models/model.h>
 #include <QApplication>
+
+#include "Models/model.h"
+#include "Views/mainwindow.h"
+#include "Controllers/controller.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,9 +14,6 @@ int main(int argc, char *argv[])
 
     view.setController(controller);
     view.show();
-
-//    view.init();
-
     view.loadConfig();
 
     return a.exec();

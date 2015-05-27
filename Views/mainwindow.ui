@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>List Folders</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/root/Exports/icons/icon.ico</normaloff>:/root/Exports/icons/icon.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_7">
     <property name="bottomMargin">
@@ -649,6 +653,8 @@
   <tabstop>bTreeViewer</tabstop>
   <tabstop>teOut</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

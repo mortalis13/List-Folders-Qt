@@ -1,12 +1,10 @@
 #include "model.h"
+
 #include "Models/scandirectory.h"
 #include "Models/modelobserver.h"
 #include "Models/modelfunctions.h"
 
-#include <QDir>
-
-Model::Model(QObject *parent) :
-  QObject(parent)
+Model::Model()
 {
   db=new Database;
 }
@@ -17,6 +15,10 @@ void Model::startScan(const QHash<QString, QVariant> &fields)
   scandir->init(fields);
   scandir->registerObservers(observers);
   scandir->startScan();
+}
+
+void Model::stopScan(){
+  scandir->stopScan();
 }
 
 QHash<QString, QVariant> Model::loadConfig()
@@ -40,8 +42,4 @@ void Model::saveConfig(const QHash<QString, QVariant> &fields)
 
 void Model::registerObserver(ModelObserver *observer){
   observers.append(observer);
-}
-
-void Model::stopScan(){
-  scandir->stopScan();
 }

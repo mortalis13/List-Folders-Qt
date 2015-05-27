@@ -9,9 +9,8 @@ class MainWindow;
 
 class Functions : public QObject
 {
-    Q_OBJECT
 public:
-    explicit Functions(QObject *parent = 0);
+  explicit Functions(QObject *parent = 0);
 
   static QHash<QString, QVariant> getFieldsMap(Ui::MainWindow *ui);
   static QString formatPath(QString path);
@@ -20,9 +19,6 @@ public:
   static void log(Ui::MainWindow *ui, const QString &text);
   static QString formatTime(int time, QString format);
   static void loadConfig(Ui::MainWindow *ui, const QHash<QString, QVariant> &fields);
-signals:
-
-public slots:
 
 };
 

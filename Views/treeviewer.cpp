@@ -1,5 +1,6 @@
 #include "treeviewer.h"
 #include "ui_treeviewer.h"
+
 #include <QFileDialog>
 #include <QShortcut>
 #include <QJsonArray>
@@ -12,6 +13,7 @@ TreeViewer::TreeViewer(TreeViewerModel& model, QWidget *parent) :
 {
   ui->setupUi(this);
   init();
+  
   addActions();
   addShortcuts();
 
@@ -22,13 +24,11 @@ TreeViewer::~TreeViewer()
 {
   unloadTree();
   delete ui;
+  
   qDebug() << "Destroy TreeViewer";
 }
 
 void TreeViewer::init(){
-//  QString path="C:/1-Roman/Documents/8-test/list-test/en/en.json";
-//  ui->lePath->setText(path);
-
   treeModel=NULL;
 
   ui->tree->header()->hide();
@@ -37,10 +37,8 @@ void TreeViewer::init(){
 
 void TreeViewer::addActions()
 {
-  connect( ui->bUnloadTree, SIGNAL(clicked()), this, SLOT(bUnloadTreeClick()) );
   connect( ui->bLoadTree, SIGNAL(clicked()), this, SLOT(bLoadTreeClick()) );
   connect( ui->bBrowse, SIGNAL(clicked()), this, SLOT(bBrowseClick()) );
-
   connect( ui->tree, SIGNAL(clicked(const QModelIndex &)), this, SLOT(treeClick(const QModelIndex &)) );
 }
 
@@ -56,10 +54,7 @@ void TreeViewer::addShortcuts()
   connect( quit, SIGNAL(activated()), this, SLOT(close()) );
 }
 
-void TreeViewer::setController(TreeViewerController &controller)
-{
-  m_controller=&controller;
-}
+// ---------------------------------------------- button handlers ----------------------------------------------
 
 void TreeViewer::bLoadTreeClick()
 {
@@ -72,18 +67,6 @@ void TreeViewer::bLoadTreeClick()
 
    treeModel=m_controller->getTreeModel(treePath);
    ui->tree->setModel(treeModel);
-}
-
-void TreeViewer::bUnloadTreeClick()
-{
-  unloadTree();
-}
-
-void TreeViewer::unloadTree(){
-  if(treeModel!=NULL){
-    m_controller->freeMemory(treeModel);
-    treeModel=NULL;
-  }
 }
 
 void TreeViewer::bBrowseClick(){
@@ -107,7 +90,7 @@ void TreeViewer::treeClick(const QModelIndex &index){
     tree->expand(index);
 }
 
-// ----------------------------------------------------------------------------------------------
+// ------------------------------------------ helpers ------------------------------------------
 
 QString TreeViewer::path(){
   return ui->lePath->text();
@@ -115,4 +98,18 @@ QString TreeViewer::path(){
 
 void TreeViewer::setPath(QString path){
   ui->lePath->setText(path);
+}
+
+void TreeViewer::unloadTree(){
+  if(treeModel!=NULL){
+    m_controller->freeMemory(treeModel);
+    treeModel=NULL;
+  }
+}
+
+// ------------------------------------------ service ------------------------------------------
+
+void TreeViewer::setController(TreeViewerController &controller)
+{
+  m_controller=&controller;
 }

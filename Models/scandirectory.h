@@ -14,38 +14,23 @@
 #include "Models/modelobserver.h"
 
 class ScanDirectory:public QThread
-//    class ScanDirectory : public QObject, public QThread
 {
     Q_OBJECT
 
 public:
-//    class ScanWorker:public QThread{
-//    public:
-//      ScanWorker(){
-
-//      }
-//      void run(){
-
-//      }
-
-//    };
-
-//  explicit ScanDirectory(QObject *parent = 0);
     explicit ScanDirectory();
 
     void startScan();
+    void stopScan();
+    
     void init(const QHash<QString, QVariant> &fields);
-    void test();
-    QString getResult();
-    void fillList();
-    QString getList();
+    void run();
+    
     QString getText();
     QString getJson();
-    void done();
-    void run();
+    
     void registerObservers(QList<ModelObserver *> observers);
 
-    void stopScan();
 public slots:
     void notifyObservers(QString currentDir, QString timeString, int progress);
     void notifyUpdateStatusBar(QString type, QString currentDir);
@@ -62,13 +47,12 @@ private:
 
     bool scanCanceled;
 
-    QString path;       //??
+    QString path;
 
     QString text;
     QString json;
     QJsonArray jsonArray;
-
-    QList<QString> nameList;
+    QString exportName;
 
     QStringList filterExt;
     QStringList excludeExt;
@@ -76,8 +60,6 @@ private:
 
     bool doExportText;
     bool doExportTree;
-
-    QString exportName;
 
     int dirCount;
     int rootDirCount;
@@ -94,19 +76,25 @@ private:
     QList<ModelObserver*> observers;
     
     QJsonArray fullScan(const QString& dir, int level=0);
+    void prepareProcessing();
+    void done();
+    
+    QString replaceTemplate(QString tmpl, QString replacement, QString text);
     QString getPadding(int level);
     QStringList getFilters(QString filter);
     QString getIcon(QString file);
+    
+    int logStats(QString currentDir, int progress);
     int getDirCount(int totalCount);
+    
     bool filterDirectory(QString dir);
     bool filterFile(QString file);
+    QString getFiltersText();
+    
     void exportText();
     void exportTree();
     QString getExportName(QString ext="");
-    QString getFiltersText();
-    QString replaceTemplate(QString tmpl, QString replacement, QString text);
-    void prepareProcessing();
-    int logStats(QString currentDir, int progress);
+    
 };
 
 #endif // SCANDIRECTORY_H

@@ -6,20 +6,15 @@
 #include "Views/mainwindow.h"
 
 class MainWindow;
-class Model;
 
-class Controller : public QObject
+class Controller
 {
-    Q_OBJECT
 public:
     explicit Controller(MainWindow& view, Model &model);
     void scanDir(const QHash<QString, QVariant> &fields);
     void saveConfig(const QHash<QString, QVariant> &fields);
     QHash<QString, QVariant> loadConfig();
     void stopScan();
-signals:
-
-public slots:
 
 private:
     MainWindow& m_view;

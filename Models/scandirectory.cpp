@@ -1,9 +1,10 @@
 #include "scandirectory.h"
+
 #include <QDir>
 #include <QHash>
 #include <QVariant>
 #include <QDebug>
-#include <QThread>
+
 #include <Models/Tree/dirnode.h>
 #include <Models/Tree/filenode.h>
 #include <Models/Tree/treenode.h>
@@ -80,11 +81,6 @@ void ScanDirectory::startScan()
   prepareProcessing();
   start();
   scanCanceled=false;
-
-//  jsonArray=fullScan(path);
-//  QJsonDocument doc(jsonArray);
-//  QByteArray byteArray=doc.toJson();
-//  json=QString(byteArray);
 }
 
 void ScanDirectory::stopScan()
@@ -124,8 +120,6 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
   QFileInfoList dirList=qdir.entryInfoList();
   if (level == 0) {
     rootDirCount = getDirCount(dirList.size());
-    qDebug() << "rootDirCount: " << rootDirCount;
-    qDebug() << "dirList.size(): " << dirList.size();
   }
 
   foreach(QFileInfo nextDir, dirList){
@@ -134,7 +128,7 @@ QJsonArray ScanDirectory::fullScan(const QString &dir, int level)
 
     if(level==0){
       if(!filterDirectory(name)) continue;
-       emit updateStatusBar("scanning", currentDir);
+      emit updateStatusBar("scanning", currentDir);
     }
 
     if(doExportText)
@@ -241,7 +235,6 @@ QString ScanDirectory::getIcon(QString file)
   if(ext.length()==0) return icon;
 
   if(useDefault){                                             // extensions for known types
-    // foreach(int i=0; i<exts.i++){
     foreach(QString item, exts){
       if(item==ext){
         icon=path+item+iconExt;
@@ -484,23 +477,4 @@ void ScanDirectory::notifyScanningFinished()
 {
   foreach(ModelObserver *observer, observers)
     observer->scanningFinished(totalTime);
-}
-
-//void ScanDirectory::notifyObservers(int progress){
-//  foreach(ModelObserver *observer, observers)
-//    observer->updateState(progress);
-//}
-
-// --------------------------------------------------- test ---------------------------------------------------
-
-QString ScanDirectory::getResult(){
-  QString res="resultx";
-  return res;
-}
-
-void ScanDirectory::test()
-{
-  FileNode file("file1.txt", "icon");
-  QList<TreeNode> list;
-  list.append(file);
 }
