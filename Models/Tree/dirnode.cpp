@@ -3,13 +3,18 @@
 DirNode::DirNode(QString text) : TreeNode(text)
 {
   treeChildren=new QList<TreeNode*>();
-  m_parent=new TreeNode();
+//  m_parent=new TreeNode();
 //  children=new QJsonArray();
 }
 
 DirNode::DirNode(QString text, QJsonArray children) : TreeNode(text)
 {
   this->children=children;
+}
+
+DirNode::~DirNode()
+{
+  delete treeChildren;
 }
 
 void DirNode::setParent(DirNode *parent)

@@ -7,11 +7,15 @@ TreeViewerController::TreeViewerController(TreeViewer& view, TreeViewerModel &mo
 {
 }
 
-TreeModel* TreeViewerController::getTree(const QString& path){
+TreeModel* TreeViewerController::getTreeModel(const QString& path){
   qDebug("getTree()");
 
   TreeModel* treeModel;
-  treeModel=m_model.getTree(path);
+  treeModel=m_model.getTreeModel(path);
 
   return treeModel;
+}
+
+void TreeViewerController::freeMemory(TreeModel *treeModel){
+  m_model.freeMemory(treeModel);
 }

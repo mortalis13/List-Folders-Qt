@@ -20,23 +20,48 @@ void TreeViewerModel::showTree(DirNode *root)
     else{
       qDebug() << "  File: " << item->text;
     }
-
   }
 }
 
-TreeModel* TreeViewerModel::getTree(const QString& path)
+TreeModel* TreeViewerModel::getTreeModel(const QString& path)
 {
+  QString json;
+
   DirNode* root;
   TreeModel* treeModel;
-  QString json;
 
   json=ModelFunctions::readFile(path);
   root=ModelFunctions::decodeTree(json);
-
   treeModel=ModelFunctions::getTreeModel(root);
+
+  qDebug() << "Root size: " << sizeof(*root);
 
 //  showTree(root);
 //  qDebug() << "JSON: " << json;
 
   return treeModel;
+}
+
+void TreeViewerModel::deleteTree(DirNode* parent){
+  QList<TreeNode*> list=*(parent->treeChildren);
+
+  foreach(TreeNode* item, list){
+    DirNode *d=dynamic_cast<DirNode*>(item);
+    if(d){
+      deleteTree(d);
+      delete d;
+    }
+    else{
+      delete item;
+    }
+  }
+}
+
+void TreeViewerModel::freeMemory(TreeModel *treeModel){
+  qDebug() << "  == Unloading Tree ==";
+
+  DirNode* root=treeModel->getRoot();
+  deleteTree(root);
+  delete root;
+  delete treeModel;
 }

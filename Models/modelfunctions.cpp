@@ -11,9 +11,14 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include <QJsonParseError>
+#include <QDebug>
+
 ModelFunctions::ModelFunctions()
 {
 }
+
+int ModelFunctions::size=0;
 
 bool ModelFunctions::matches(QString regex, QString text)
 {
@@ -138,7 +143,6 @@ QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray &array, DirNode *parent){
     if(item.contains("children")){
       QJsonArray childrenArray=item["children"].toArray();
       DirNode *dir=new DirNode(text);
-
       QList<TreeNode*> *children=parseTree(childrenArray, dir);
 
       dir->treeChildren=children;
@@ -158,13 +162,23 @@ QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray &array, DirNode *parent){
 }
 
 DirNode* ModelFunctions::decodeTree(QString json){
-  QByteArray byteArray(qPrintable(json));
-  QJsonDocument doc(QJsonDocument::fromJson(byteArray));
+//  QByteArray byteArray(qPrintable(json));
+  QByteArray byteArray( json.toUtf8() );
+
+  QJsonParseError error;
+  QJsonDocument doc( QJsonDocument::fromJson(byteArray, &error) );
+
+  if(error.error)
+    qDebug() << "QJsonDocument error: " << error.errorString();
+
   QJsonArray array=doc.array();
-  
+  qDebug() << "QJsonArray size: " << array.size();
+
   DirNode *root=new DirNode("root");
   QList<TreeNode*> *tree=parseTree(array, root);
   root->treeChildren=tree;
+
+  qDebug() << "size: " << size;
 
   return root;
 }

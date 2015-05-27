@@ -29,6 +29,7 @@ private slots:
   void bBrowseClick();
   void treeClick(const QModelIndex &index);
 
+  void bUnloadTreeClick();
 private:
   Ui::TreeViewer *ui;
   void init();
@@ -37,6 +38,9 @@ private:
   
   TreeViewerController *m_controller;
   TreeViewerModel &m_model;
+
+  TreeModel* treeModel;
+  void unloadTree();
 };
 
 #endif // TREEVIEWER_H

@@ -27,8 +27,12 @@ public:
     
     static QString getNameFromPath(QString path);
     static QString extractIconName(QString path);
+
+    static int size;
+
 private:
     static QList<TreeNode *> *parseTree(QJsonArray &array, DirNode *parent);
+
 };
 
 #endif // MODELFUNCTIONS_H

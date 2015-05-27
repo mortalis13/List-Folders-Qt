@@ -14,7 +14,8 @@ class TreeViewerController
 public:
   TreeViewerController(TreeViewer& view, TreeViewerModel &model);
   
-  TreeModel *getTree(const QString& path);
+  TreeModel *getTreeModel(const QString& path);
+  void freeMemory(TreeModel* treeModel);
 private:
   TreeViewer& m_view;
   TreeViewerModel& m_model;

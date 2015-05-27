@@ -34,8 +34,9 @@ void Database::initDatabase(){
   
   if( !query.exec() )
     qDebug() << "initDatabase() error: " << query.lastError();
-  else
-    qDebug() << "Table created!";
+  else{
+    qDebug() << "Database initialized!";
+  }
 }
 
 void Database::closeConnection(){
@@ -106,9 +107,9 @@ QString Database::getOption(QString name){
  * to load options set into the form fields
  */
 QString Database::getOption(QString name, QString table){
-  sql="select value from "+table+" where name=:name";
-
   if (!connected) return QString();
+
+  sql="select value from "+table+" where name=:name";
   
   query.prepare(sql);
   query.bindValue(":name", name);
@@ -117,11 +118,11 @@ QString Database::getOption(QString name, QString table){
   if( !query.exec() )
     qDebug() << "getOption() error: " << query.lastError();
   else{
-    query.next();
-    QString res=query.value(0).toString();
-
-    qDebug() << "getOption() success";
-    return res;
+    if(query.next()){
+      QString res=query.value(0).toString();
+      qDebug() << "getOption() success";
+      return res;
+    }
   }
   
   return QString();

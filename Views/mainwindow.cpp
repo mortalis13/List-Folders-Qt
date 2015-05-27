@@ -63,7 +63,7 @@ void MainWindow::setController(Controller& controller)
 void MainWindow::loadConfig(){
   QHash<QString, QVariant> fields;
   fields=m_controller->loadConfig();
-  Functions::loadConfig(ui, fields);
+//  Functions::loadConfig(ui, fields);
 }
 
 void MainWindow::printResult(const QString &text)

@@ -5,11 +5,15 @@
 TreeModel::TreeModel(DirNode *root, QObject *parent) : QAbstractItemModel(parent){
   m_root = root;
   iconsPath="lib/icons/";
-  prepareIcons();
+//  prepareIcons();
+}
+
+DirNode* TreeModel::getRoot(){
+  return m_root;
 }
 
 void TreeModel::prepareIcons(){
-  icons.append(QIcon(iconsPath+"directory.png"));
+//  icons.append(QIcon(iconsPath+"directory.png"));
 }
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const{

@@ -14,6 +14,7 @@ class DirNode:public TreeNode
 public:
   DirNode(QString text);
   DirNode(QString text, QJsonArray children);
+  ~DirNode();
   void setParent(DirNode* parent);
   void write(QJsonObject &json) const;
 

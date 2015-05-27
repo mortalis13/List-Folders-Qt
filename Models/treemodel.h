@@ -19,10 +19,11 @@ public:
   QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
   QModelIndex parent( const QModelIndex &index ) const;
 
+  DirNode *getRoot();
 private:
   DirNode *m_root;
   QString iconsPath;
-  QList<QIcon> icons;
+//  QList<QIcon> icons;
   void prepareIcons();
 };
 

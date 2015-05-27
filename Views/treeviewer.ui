@@ -106,6 +106,13 @@
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QPushButton" name="bUnloadTree">
+      <property name="text">
+       <string>Unload Tree</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

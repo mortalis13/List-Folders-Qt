@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QShortcut>
 #include <QJsonArray>
+#include <QDebug>
 
 TreeViewer::TreeViewer(TreeViewerModel& model, QWidget *parent) :
   QMainWindow(parent),
@@ -13,16 +14,22 @@ TreeViewer::TreeViewer(TreeViewerModel& model, QWidget *parent) :
   init();
   addActions();
   addShortcuts();
+
+  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 TreeViewer::~TreeViewer()
 {
+  unloadTree();
   delete ui;
+  qDebug() << "Destroy TreeViewer";
 }
 
 void TreeViewer::init(){
 //  QString path="C:/1-Roman/Documents/8-test/list-test/en/en.json";
 //  ui->lePath->setText(path);
+
+  treeModel=NULL;
 
   ui->tree->header()->hide();
   ui->tree->setAnimated(true);
@@ -30,6 +37,7 @@ void TreeViewer::init(){
 
 void TreeViewer::addActions()
 {
+  connect( ui->bUnloadTree, SIGNAL(clicked()), this, SLOT(bUnloadTreeClick()) );
   connect( ui->bLoadTree, SIGNAL(clicked()), this, SLOT(bLoadTreeClick()) );
   connect( ui->bBrowse, SIGNAL(clicked()), this, SLOT(bBrowseClick()) );
 
@@ -39,13 +47,13 @@ void TreeViewer::addActions()
 void TreeViewer::addShortcuts()
 {
   QShortcut *bLoadTree=new QShortcut(QKeySequence("Ctrl+R"), this);
-  connect(bLoadTree, SIGNAL(activated()), ui->bLoadTree, SLOT(click()));
+  connect( bLoadTree, SIGNAL(activated()), ui->bLoadTree, SLOT(click()) );
 
   QShortcut *bBrowse=new QShortcut(QKeySequence("Ctrl+O"), this);
   connect( bBrowse, SIGNAL(activated()), ui->bBrowse, SLOT(click()) );
 
   QShortcut *quit=new QShortcut(QKeySequence("Esc"), this);
-  connect(quit, SIGNAL(activated()), this, SLOT(close()));
+  connect( quit, SIGNAL(activated()), this, SLOT(close()) );
 }
 
 void TreeViewer::setController(TreeViewerController &controller)
@@ -60,9 +68,22 @@ void TreeViewer::bLoadTreeClick()
      ui->bBrowse->click();
      return;
    }
+   unloadTree();
 
-   TreeModel* treeModel=m_controller->getTree(treePath);
-   ui->tree->setModel(treeModel);
+   treeModel=m_controller->getTreeModel(treePath);
+//   ui->tree->setModel(treeModel);
+}
+
+void TreeViewer::bUnloadTreeClick()
+{
+  unloadTree();
+}
+
+void TreeViewer::unloadTree(){
+  if(treeModel!=NULL){
+    m_controller->freeMemory(treeModel);
+    treeModel=NULL;
+  }
 }
 
 void TreeViewer::bBrowseClick(){
