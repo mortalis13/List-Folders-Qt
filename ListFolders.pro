@@ -8,7 +8,7 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = ListFoldersMVC
+TARGET = ListFolders
 TEMPLATE = app
 
 
@@ -54,5 +54,5 @@ QMAKE_CXXFLAGS += -std=c++11
 RESOURCES += \
     resources.qrc
 
-# RC_FILE = myapp.rc
+# RC_FILE = resources.rc
 win32:RC_ICONS += icon.ico
