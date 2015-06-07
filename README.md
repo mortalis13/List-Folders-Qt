@@ -26,9 +26,9 @@ Additional **Export name** field allows set different name for exported files. B
 1. To build from source - [Qt5.3.1](http://download.qt.io/official_releases/qt/5.3/5.3.1/).
 
 
-# Install & Run
+## Install & Run
 
-1. Run the **List Folders.exe** or **List Folders.msi** installer and pass all steps ([installer on SourceForge]()).
+1. Run the **List Folders.exe** or **List Folders.msi** installer and pass all steps ([installer on SourceForge](https://sourceforge.net/projects/listfolders/files/Qt/)).
 2. The **Desktop** and **Start Menu** *shortcuts* should be created.
 3. Start the program with the shortcut or using the **List Folders.exe** file from the installed directory.
 
