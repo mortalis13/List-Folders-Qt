@@ -1,5 +1,7 @@
 # List Folders
 
+[SourceForge download](https://sourceforge.net/projects/listfolders/files/Qt)
+
 Main features:
 
 - List files and subfolders of a selected directory.
