@@ -1,6 +1,6 @@
 # List Folders
 
-[SourceForge download](https://sourceforge.net/projects/listfolders/files/Qt)
+[![Download List Folders](https://sourceforge.net/sflogo.php?type=11&group_id=2452708)](https://sourceforge.net/projects/listfolders/files/Qt) *[SourceForge download](https://sourceforge.net/projects/listfolders/files/Qt)*
 
 Main features:
 
