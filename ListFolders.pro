@@ -4,6 +4,9 @@
 #
 #-------------------------------------------------
 
+# 1.0.1
+# Qt5
+
 QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

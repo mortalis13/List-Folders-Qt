@@ -21,6 +21,8 @@ MainWindow::MainWindow(Model &model, QWidget *parent) :
   addActions();
   addShortcuts();
   model.registerObserver(this);
+
+  setWindowTitle("List Folders v1.0.1");
 }
 
 MainWindow::~MainWindow()

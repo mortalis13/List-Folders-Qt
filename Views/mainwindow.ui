@@ -174,7 +174,7 @@
           <item>
            <widget class="QLabel" name="lFilterExt">
             <property name="text">
-             <string>Filer Extensions</string>
+             <string>Filter Extensions</string>
             </property>
            </widget>
           </item>
@@ -273,7 +273,7 @@
           <item>
            <widget class="QLabel" name="lFilterDir">
             <property name="text">
-             <string>Filer Directories</string>
+             <string>Filter Directories</string>
             </property>
            </widget>
           </item>
