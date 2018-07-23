@@ -1,7 +1,5 @@
 # List Folders (Qt version)
 
-[![Download List Folders](https://sourceforge.net/sflogo.php?type=11&group_id=2452708)](https://sourceforge.net/projects/listfolders/files/Qt)
-
 Main features:
 
 - List files and subfolders of a selected directory.
