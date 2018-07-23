@@ -23,17 +23,9 @@ These export options are available:
 Additional **Export name** field allows set different name for exported files. By default the root folder name is used.
 
 
-## Requirements
+## Download
 
-1. To build from source - [Qt5.3.1](http://download.qt.io/official_releases/qt/5.3/5.3.1/).
-
-
-## Install & Run
-
-1. Run the **List Folders.exe** or **List Folders.msi** installer and pass all steps ([installer on SourceForge](https://sourceforge.net/projects/listfolders/files/Qt/)).
-2. The **Desktop** and **Start Menu** *shortcuts* should be created.
-3. Start the program with the shortcut or using the **List Folders.exe** file from the installed directory.
-
+Portable install: [releases](https://github.com/mortalis13/List-Folders-Qt/releases)
 
 ## Usage
 
@@ -68,11 +60,15 @@ Additional **Export name** field allows set different name for exported files. B
 - **Esc** - Exit **Main window** / **Tree Viewer**
 
 
+## Build
+
+To build from source - [Qt5.3.1](http://download.qt.io/official_releases/qt/5.3/5.3.1/).
+
 ## Screenshots
 
-![list-folders-main](/files/list-folders-main.png)
-![tree-viewer](/files/tree-viewer.png)
-
+![list-folders-main](/files/listfolders-1.png)
+![tree-viewer](/files/listfolders-2.png)
+![export-example](/files/listfolders-3.png)
 
 ## Comparison with C# and Java versions
 
