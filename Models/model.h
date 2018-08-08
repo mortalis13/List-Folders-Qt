@@ -9,19 +9,19 @@
 class Model
 {
 public:
-    explicit Model();
-    
-    void startScan(const QHash<QString, QVariant> &fields);
-    void stopScan();
-    
-    void saveConfig(const QHash<QString, QVariant> &fields);
-    QHash<QString, QVariant> loadConfig();
-    void registerObserver(ModelObserver *observer);
+  explicit Model();
+  
+  void startScan(const QHash<QString, QVariant> &fields);
+  void stopScan();
+  
+  void saveConfig(const QHash<QString, QVariant> &fields);
+  QHash<QString, QVariant> loadConfig();
+  void registerObserver(ModelObserver *observer);
 
 private:
-    QList<ModelObserver*> observers;
-    ScanDirectory *scandir;
-    Database *db;
+  QList<ModelObserver*> observers;
+  ScanDirectory *scandir;
+  Database *db;
 };
 
 #endif // MODEL_H

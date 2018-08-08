@@ -54,15 +54,15 @@ void Functions::loadConfig(Ui::MainWindow* ui, const QHash<QString, QVariant> &f
 /*
  * Sets progress bar value
  */
-void Functions::setProgress(Ui::MainWindow* ui, int progress){
+void Functions::setProgress(Ui::MainWindow* ui, int progress) {
   ui->progressBar->setValue(progress);
 }
 
-void Functions::log(Ui::MainWindow* ui, const QString &text){
+void Functions::log(Ui::MainWindow* ui, const QString &text) {
   ui->teOut->appendPlainText(text);
 }
 
-void Functions::clearLog(Ui::MainWindow* ui){
+void Functions::clearLog(Ui::MainWindow* ui) {
   ui->teOut->clear();
 }
 

@@ -24,7 +24,7 @@ void DirNode::setParent(DirNode *parent)
 
 void DirNode::write(QJsonObject &json) const
 {
-    json["text"]=text;
-    json["icon"]=icon;
-    json["children"]=children;
+  json["text"]=text;
+  json["icon"]=icon;
+  json["children"]=children;
 }

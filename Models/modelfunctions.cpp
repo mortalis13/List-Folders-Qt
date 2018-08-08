@@ -21,9 +21,9 @@
 /*
  * Formats path, fixes backslashes, trims
  */
-QString ModelFunctions::formatPath(QString path){
-  path=path.replace("\\", "/");
-  path=path.trimmed();
+QString ModelFunctions::formatPath(QString path) {
+  path = path.replace("\\", "/");
+  path = path.trimmed();
   return path;
 }
 
@@ -52,7 +52,7 @@ QString ModelFunctions::extractIconName(QString path) {
 bool ModelFunctions::matches(QString regex, QString text)
 {
     QRegExp rx(regex);
-    if(rx.indexIn(text)!=-1)
+    if (rx.indexIn(text)!=-1)
         return true;
     return false;
 }
@@ -60,14 +60,14 @@ bool ModelFunctions::matches(QString regex, QString text)
 /*
  * Returns the result of the string search using regex
  * The 'group' parameter corresponds to the regex group in parenthesis
- * If the whole result is needed group=0 should be passed
+ * If the whole result is needed group = 0 should be passed
  */
 QString ModelFunctions::regexFind(QString pattern, QString text, int group) {
   QString res;
 
   QRegExp rx(pattern);
-  if(rx.indexIn(text)!=-1)
-      res=rx.cap(group);
+  if (rx.indexIn(text)!=-1)
+      res = rx.cap(group);
 
   return res;
 }
@@ -82,7 +82,7 @@ QString ModelFunctions::readFile(QString path) {
     return QString();
   }
   
-  QByteArray byteArray=file.readAll();
+  QByteArray byteArray = file.readAll();
   QString res(byteArray);
   
   return res;
@@ -104,8 +104,7 @@ void ModelFunctions::writeFile(QString path, QString text) {
 /*
  * Formats time value according to the format
  */
-QString ModelFunctions::formatTime(int time, QString format)
-{
+QString ModelFunctions::formatTime(int time, QString format) {
   QString res;
   return res.sprintf(qPrintable(format), (float)time / 1000);
 }
@@ -115,20 +114,19 @@ QString ModelFunctions::formatTime(int time, QString format)
 /*
  * Converts field values from the 'fields' map to JSON
  */
-QString ModelFunctions::encodeFields(const QHash<QString, QVariant> &fields)
-{
+QString ModelFunctions::encodeFields(const QHash<QString, QVariant> &fields) {
   QJsonArray jsonArray;
   QString json;
 
   foreach (QString key, fields.keys()) {
     QJsonObject item;
-    item[key]=fields[key].toString();
+    item[key] = fields[key].toString();
     jsonArray.append(item);
   }
 
   QJsonDocument doc(jsonArray);
-  QByteArray byteArray=doc.toJson();
-  json=QString(byteArray);
+  QByteArray byteArray = doc.toJson();
+  json = QString(byteArray);
 
   return json;
 }
@@ -136,17 +134,17 @@ QString ModelFunctions::encodeFields(const QHash<QString, QVariant> &fields)
 /*
  * Gets field values from the JSON string and returns the map of (field_name => field_value) pairs
  */
-QHash<QString, QVariant> ModelFunctions::decodeFields(QString json){
+QHash<QString, QVariant> ModelFunctions::decodeFields(QString json) {
   QHash<QString, QVariant> fields;
   
   QByteArray byteArray(qPrintable(json));
   QJsonDocument doc(QJsonDocument::fromJson(byteArray));
-  QJsonArray array=doc.array();
+  QJsonArray array = doc.array();
 
   foreach (QJsonValue val, array) {
-    QJsonObject item=val.toObject();
-    QString key=item.keys()[0];
-    QString value=item[key].toString();
+    QJsonObject item = val.toObject();
+    QString key = item.keys()[0];
+    QString value = item[key].toString();
     
     fields.insert(key, value);
   }
@@ -160,20 +158,20 @@ QHash<QString, QVariant> ModelFunctions::decodeFields(QString json){
  * Gets JsonArray from the JSON string, converts it to the recursive list of TreeNode pointers
  * Returns the pointer to the root of the tree structure which is used to create the tree view model
  */
-DirNode* ModelFunctions::decodeTree(QString json){
+DirNode* ModelFunctions::decodeTree(QString json) {
   QByteArray byteArray(json.toUtf8());
 
   QJsonParseError error;
   QJsonDocument doc(QJsonDocument::fromJson(byteArray, &error));
 
-  if(error.error)
+  if (error.error)
     qDebug() << "QJsonDocument error: " << error.errorString();
 
-  QJsonArray array=doc.array();
+  QJsonArray array = doc.array();
 
-  DirNode *root=new DirNode("root");
-  QList<TreeNode*> *tree=parseTree(array, root);
-  root->treeChildren=tree;
+  DirNode *root = new DirNode("root");
+  QList<TreeNode*> *tree = parseTree(array, root);
+  root->treeChildren = tree;
 
   return root;
 }
@@ -182,27 +180,27 @@ DirNode* ModelFunctions::decodeTree(QString json){
  * Processes JSON array and creates the recursive list of TreeNode pointers
  * The converted structure is needed for the tree view model
  */
-QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray array, DirNode *parent){
-  QList<TreeNode*> *list=new QList<TreeNode*>();
+QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray array, DirNode *parent) {
+  QList<TreeNode*> *list = new QList<TreeNode*>();
 
-  foreach(QJsonValue val, array){
-    QJsonObject item=val.toObject();
-    QString text=item["text"].toString();
-    QString icon=item["icon"].toString();
+  foreach (QJsonValue val, array) {
+    QJsonObject item = val.toObject();
+    QString text = item["text"].toString();
+    QString icon = item["icon"].toString();
 
-    if(item.contains("children")){                                      // if is directory
-      QJsonArray childrenArray=item["children"].toArray();
-      DirNode *dir=new DirNode(text);
-      QList<TreeNode*> *children=parseTree(childrenArray, dir);         // recursive call (inside the directory)
+    if (item.contains("children")) {                                      // if is directory
+      QJsonArray childrenArray = item["children"].toArray();
+      DirNode *dir = new DirNode(text);
+      QList<TreeNode*> *children = parseTree(childrenArray, dir);         // recursive call (inside the directory)
 
-      dir->treeChildren=children;
+      dir->treeChildren = children;
       dir->setParent(parent);
-      dir->icon=icon;
+      dir->icon = icon;
 
       list->append(dir);
     }
-    else{                                                               // if is file
-      FileNode *file=new FileNode(text, icon);
+    else {                                                               // if is file
+      FileNode *file = new FileNode(text, icon);
       file->setParent(parent);
       list->append(file);
     }
@@ -214,7 +212,7 @@ QList<TreeNode*>* ModelFunctions::parseTree(QJsonArray array, DirNode *parent){
 /*
  * Creates new model from the 'root'
  */
-TreeModel* ModelFunctions::getTreeModel(DirNode* root){
-  TreeModel* treeModel=new TreeModel(root);
+TreeModel* ModelFunctions::getTreeModel(DirNode* root) {
+  TreeModel* treeModel = new TreeModel(root);
   return treeModel;
 }

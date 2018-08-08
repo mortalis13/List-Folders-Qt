@@ -28,8 +28,8 @@ TreeViewer::~TreeViewer()
   qDebug() << "Destroy TreeViewer";
 }
 
-void TreeViewer::init(){
-  treeModel=NULL;
+void TreeViewer::init() {
+  treeModel = NULL;
 
   ui->tree->header()->hide();
   ui->tree->setAnimated(true);
@@ -44,13 +44,13 @@ void TreeViewer::addActions()
 
 void TreeViewer::addShortcuts()
 {
-  QShortcut *bLoadTree=new QShortcut(QKeySequence("Ctrl+R"), this);
+  QShortcut *bLoadTree = new QShortcut(QKeySequence("Ctrl+R"), this);
   connect( bLoadTree, SIGNAL(activated()), ui->bLoadTree, SLOT(click()) );
 
-  QShortcut *bBrowse=new QShortcut(QKeySequence("Ctrl+O"), this);
+  QShortcut *bBrowse = new QShortcut(QKeySequence("Ctrl+O"), this);
   connect( bBrowse, SIGNAL(activated()), ui->bBrowse, SLOT(click()) );
 
-  QShortcut *quit=new QShortcut(QKeySequence("Esc"), this);
+  QShortcut *quit = new QShortcut(QKeySequence("Esc"), this);
   connect( quit, SIGNAL(activated()), this, SLOT(close()) );
 }
 
@@ -63,28 +63,28 @@ void TreeViewer::addShortcuts()
  */
 void TreeViewer::bLoadTreeClick()
 {
-   QString treePath=path();
-   if(treePath.length()==0){
+   QString treePath = path();
+   if (treePath.length()==0) {
      ui->bBrowse->click();
      return;
    }
    unloadTree();
 
-   treeModel=m_controller->getTreeModel(treePath);
+   treeModel = m_controller->getTreeModel(treePath);
    ui->tree->setModel(treeModel);
 }
 
 /*
  * Opens browse dialog to select a JSON file with tree structure
  */
-void TreeViewer::bBrowseClick(){
-  QString dir=path();
-  if(dir.length()==0) dir="export/tree/json";
+void TreeViewer::bBrowseClick() {
+  QString dir = path();
+  if (dir.length()==0) dir = "export/tree/json";
 
   QString filename = QFileDialog::getOpenFileName(
           this, tr("Select a JSON file"), dir,
           tr("JSON files (*.json)") );
-  if( !filename.isNull() )
+  if ( !filename.isNull() )
   {
     setPath(filename);
   }
@@ -93,9 +93,9 @@ void TreeViewer::bBrowseClick(){
 /*
  * Expans/collapses tree nodes on single click
  */
-void TreeViewer::treeClick(const QModelIndex &index){
-  QTreeView* tree=ui->tree;
-  if(tree->isExpanded(index))
+void TreeViewer::treeClick(const QModelIndex &index) {
+  QTreeView* tree = ui->tree;
+  if (tree->isExpanded(index))
     tree->collapse(index);
   else
     tree->expand(index);
@@ -103,21 +103,21 @@ void TreeViewer::treeClick(const QModelIndex &index){
 
 // ------------------------------------------ helpers ------------------------------------------
 
-QString TreeViewer::path(){
+QString TreeViewer::path() {
   return ui->lePath->text();
 }
 
-void TreeViewer::setPath(QString path){
+void TreeViewer::setPath(QString path) {
   ui->lePath->setText(path);
 }
 
 /*
  * Removes tree model and tree structure objects from the memory
  */
-void TreeViewer::unloadTree(){
-  if(treeModel!=NULL){
+void TreeViewer::unloadTree() {
+  if (treeModel!=NULL) {
     m_controller->freeMemory(treeModel);
-    treeModel=NULL;
+    treeModel = NULL;
   }
 }
 
@@ -125,5 +125,5 @@ void TreeViewer::unloadTree(){
 
 void TreeViewer::setController(TreeViewerController &controller)
 {
-  m_controller=&controller;
+  m_controller = &controller;
 }

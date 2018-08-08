@@ -15,8 +15,8 @@ MainWindow::MainWindow(Model &model, QWidget *parent) :
 {
   ui->setupUi(this);
   
-  scanStarted=false;
-  scanCanceled=false;
+  scanStarted = false;
+  scanCanceled = false;
   
   addActions();
   addShortcuts();
@@ -28,7 +28,7 @@ MainWindow::MainWindow(Model &model, QWidget *parent) :
 MainWindow::~MainWindow()
 {
   QHash<QString, QVariant> fields;
-  fields=Functions::getFieldsMap(ui);
+  fields = Functions::getFieldsMap(ui);
   m_controller->saveConfig(fields);
 
   delete ui;
@@ -54,25 +54,25 @@ void MainWindow::addActions()
  */
 void MainWindow::addShortcuts()
 {
-  QShortcut *bScanDir=new QShortcut(QKeySequence("Ctrl+R"), this);
+  QShortcut *bScanDir = new QShortcut(QKeySequence("Ctrl+R"), this);
   connect( bScanDir, SIGNAL(activated()), ui->bScanDir, SLOT(click()) );
 
-  QShortcut *bBrowse=new QShortcut(QKeySequence("Ctrl+O"), this);
+  QShortcut *bBrowse = new QShortcut(QKeySequence("Ctrl+O"), this);
   connect( bBrowse, SIGNAL(activated()), ui->bBrowse, SLOT(click()) );
 
-  QShortcut *bTreeViewer=new QShortcut(QKeySequence("Ctrl+T"), this);
+  QShortcut *bTreeViewer = new QShortcut(QKeySequence("Ctrl+T"), this);
   connect( bTreeViewer, SIGNAL(activated()), ui->bTreeViewer, SLOT(click()) );
 
-  QShortcut *quit=new QShortcut(QKeySequence("Esc"), this);
+  QShortcut *quit = new QShortcut(QKeySequence("Esc"), this);
   connect( quit, SIGNAL(activated()), this, SLOT(close()) );
 }
 
 /*
  * Gets the last saved config from the database and assigns it to the form fields
  */
-void MainWindow::loadConfig(){
+void MainWindow::loadConfig() {
   QHash<QString, QVariant> fields;
-  fields=m_controller->loadConfig();
+  fields = m_controller->loadConfig();
   Functions::loadConfig(ui, fields);
 }
 
@@ -82,30 +82,30 @@ void MainWindow::loadConfig(){
  * Starts/stops scanning
  * The button title changes relatively to the start/stop state
  */
-void MainWindow::bScanDirClick(){
-  if(!scanStarted){
-    scanStarted=true;
-    scanCanceled=false;
+void MainWindow::bScanDirClick() {
+  if (!scanStarted) {
+    scanStarted = true;
+    scanCanceled = false;
     prepareProcessing();
     
     QHash<QString, QVariant> fields;
-    fields=Functions::getFieldsMap(ui);
+    fields = Functions::getFieldsMap(ui);
     m_controller->scanDir(fields);
   }
-  else{
+  else {
     m_controller->stopScan();
     updateStatusBar("cancel");
-    scanStarted=false;
-    scanCanceled=true;
+    scanStarted = false;
+    scanCanceled = true;
   }
 }
 
 /*
  * Opens new TreeViewer window with the parent assigned to the main window
  */
-void MainWindow::bTreeViewerClick(){
+void MainWindow::bTreeViewerClick() {
   TreeViewerModel treeViewerModel;
-  TreeViewer *treeViewer=new TreeViewer(treeViewerModel, this);
+  TreeViewer *treeViewer = new TreeViewer(treeViewerModel, this);
   TreeViewerController treeViewerController(*treeViewer, treeViewerModel);
 
   treeViewer->setController(treeViewerController);
@@ -115,12 +115,12 @@ void MainWindow::bTreeViewerClick(){
 /*
  * Opens browse window to select a directory to scan 
  */
-void MainWindow::bBrowseClick(){
-  QString dir=path();
-  if(dir.length()==0) dir=QDir::currentPath();
+void MainWindow::bBrowseClick() {
+  QString dir = path();
+  if (dir.length()==0) dir = QDir::currentPath();
 
   QString dirname = QFileDialog::getExistingDirectory(this, tr("Select a Directory"), dir);
-  if( !dirname.isNull() )
+  if ( !dirname.isNull() )
   {
     setPath(dirname);
   }
@@ -129,19 +129,19 @@ void MainWindow::bBrowseClick(){
 /*
  * Clear buttons for textedits
  */
-void MainWindow::bClearExcludeExtClick(){
+void MainWindow::bClearExcludeExtClick() {
   ui->teExcludeExt->clear();
 }
 
-void MainWindow::bClearFilterDirClick(){
+void MainWindow::bClearFilterDirClick() {
   ui->teFilterDir->clear();
 }
 
-void MainWindow::bClearFilterExtClick(){
+void MainWindow::bClearFilterExtClick() {
   ui->teFilterExt->clear();
 }
 
-void MainWindow::bClearOutClick(){
+void MainWindow::bClearOutClick() {
   ui->teOut->clear();
 }
 
@@ -150,18 +150,18 @@ void MainWindow::bClearOutClick(){
 /*
  * Returns the Path field value
  */
-QString MainWindow::path(){
+QString MainWindow::path() {
   return ui->lePath->text();
 }
 
-void MainWindow::setPath(QString path){
+void MainWindow::setPath(QString path) {
   ui->lePath->setText(path);
 }
 
 /*
  * Changes the UI before the directory scanning
  */
-void MainWindow::prepareProcessing(){
+void MainWindow::prepareProcessing() {
   ui->progressBar->setValue(0);
   Functions::clearLog(ui);
   ui->bScanDir->setText("Stop");
@@ -170,8 +170,8 @@ void MainWindow::prepareProcessing(){
 /*
  * Helper function to set initial data for the form
  */
-void MainWindow::init(){
-  QString path="C:/1-Roman/Documents/8-test/list-test/en";
+void MainWindow::init() {
+  QString path = "C:/1-Roman/Documents/8-test/list-test/en";
   ui->lePath->setText(path);
   ui->chExportText->setChecked(true);
 }
@@ -195,18 +195,18 @@ void MainWindow::updateState(QString currentDir, QString timeString, int progres
  */
 void MainWindow::updateStatusBar(QString type, QString currentDir, QString totalTime)
 {
-  QString text="";
-  QStringList types={"scanning", "finish", "cancel"};
+  QString text = "";
+  QStringList types= {"scanning", "finish", "cancel"};
 
-  switch(types.indexOf(type)){
+   (types.indexOf(type)) {
   case 0:
-    text="Scanning: "+currentDir;
+    text = "Scanning: "+currentDir;
     break;
   case 1:
-    text="Scanning finished (time: "+totalTime+")";
+    text = "Scanning finished (time: "+totalTime+")";
     break;
   case 2:
-    text="Scanning canceled";
+    text = "Scanning canceled";
     break;
   }
   ui->statusBar->showMessage(text);
@@ -216,15 +216,15 @@ void MainWindow::updateStatusBar(QString type, QString currentDir, QString total
  * Writes total time of scanning to the log, 
  * updates the status bar and the UI
  */
-void MainWindow::scanningFinished(int totalTime){
-  scanStarted=false;
+void MainWindow::scanningFinished(int totalTime) {
+  scanStarted = false;
   
   Functions::log(ui, "----------------------------");
-  QString time=Functions::formatTime(totalTime, "%.2f s");
+  QString time = Functions::formatTime(totalTime, "%.2f s");
   Functions::log(ui, "Total time: "+time);
 
   Functions::setProgress(ui, 100);
-  if(!scanCanceled)
+  if (!scanCanceled)
     updateStatusBar("finish", "", time);
   ui->bScanDir->setText("Scan Directory");
 }
@@ -233,7 +233,7 @@ void MainWindow::scanningFinished(int totalTime){
 
 void MainWindow::setController(Controller& controller)
 {
-  m_controller=&controller;
+  m_controller = &controller;
 }
 
 /*

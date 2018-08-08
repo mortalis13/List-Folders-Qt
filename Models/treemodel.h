@@ -22,7 +22,6 @@ public:
   int columnCount( const QModelIndex &parent = QModelIndex() ) const;
   
   // custom
-  
   DirNode *getRoot();
   
 private:

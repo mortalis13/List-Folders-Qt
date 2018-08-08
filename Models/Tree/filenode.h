@@ -11,9 +11,9 @@
 class FileNode : public TreeNode
 {
 public:
-    FileNode(QString text, QString icon);
-    void write(QJsonObject &json) const;
-    void setParent(DirNode *parent);
+  FileNode(QString text, QString icon);
+  void write(QJsonObject &json) const;
+  void setParent(DirNode *parent);
 };
 
 #endif // FILENODE_H

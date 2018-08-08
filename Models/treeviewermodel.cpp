@@ -8,16 +8,15 @@
 /*
  * Returns the tree model pointer to use in the QTreeView object
  */
-TreeModel* TreeViewerModel::getTreeModel(const QString& path)
-{
+TreeModel* TreeViewerModel::getTreeModel(const QString& path) {
   QString json;
 
   DirNode* root;
-  TreeModel* treeModel=NULL;
+  TreeModel* treeModel = NULL;
 
-  json=ModelFunctions::readFile(path);                          // get JSON string
-  root=ModelFunctions::decodeTree(json);                        // get pointer to the root
-  treeModel=ModelFunctions::getTreeModel(root);                 // get TreeModel pointer
+  json = ModelFunctions::readFile(path);                          // get JSON string
+  root = ModelFunctions::decodeTree(json);                        // get pointer to the root
+  treeModel = ModelFunctions::getTreeModel(root);                 // get TreeModel pointer
 
 //  showTree(root);
 //  qDebug() << "JSON: " << json;
@@ -28,10 +27,10 @@ TreeModel* TreeViewerModel::getTreeModel(const QString& path)
 /*
  * Delete tree structure and tree model from the memory
  */
-void TreeViewerModel::freeMemory(TreeModel *treeModel){
+void TreeViewerModel::freeMemory(TreeModel *treeModel) {
   qDebug() << "== Unloading Tree ==";
 
-  DirNode* root=treeModel->getRoot();
+  DirNode* root = treeModel->getRoot();
   deleteTree(root);
   delete root;
   delete treeModel;
@@ -40,16 +39,16 @@ void TreeViewerModel::freeMemory(TreeModel *treeModel){
 /*
  * Recursively delete all nodes and treeChildren lists from the memory
  */
-void TreeViewerModel::deleteTree(DirNode* parent){
-  QList<TreeNode*> list=*(parent->treeChildren);
+void TreeViewerModel::deleteTree(DirNode* parent) {
+  QList<TreeNode*> list = *(parent->treeChildren);
 
-  foreach(TreeNode* item, list){
-    DirNode *d=dynamic_cast<DirNode*>(item);
-    if(d){
+  foreach (TreeNode* item, list) {
+    DirNode *d = dynamic_cast<DirNode*>(item);
+    if (d) {
       deleteTree(d);
       delete d;
     }
-    else{
+    else {
       delete item;
     }
   }
@@ -60,15 +59,15 @@ void TreeViewerModel::deleteTree(DirNode* parent){
  */
 void TreeViewerModel::showTree(DirNode *root)
 {
-  QList<TreeNode*> list=*(root->treeChildren);
+  QList<TreeNode*> list = *(root->treeChildren);
 
-  foreach(TreeNode* item, list){
-    DirNode *d=dynamic_cast<DirNode*>(item);
-    if(d){
+  foreach (TreeNode* item, list) {
+    DirNode *d = dynamic_cast<DirNode*>(item);
+    if (d) {
       qDebug() << "Dir: " << item->text;
       showTree(d);
     }
-    else{
+    else {
       qDebug() << "  File: " << item->text;
     }
   }

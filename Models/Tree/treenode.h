@@ -6,14 +6,14 @@
 class TreeNode
 {
 public:
-    TreeNode(QString text);
+  TreeNode(QString text);
 
-    QString text;
-    QString icon;
+  QString text;
+  QString icon;
 
-    TreeNode* m_parent;               // needed for the tree view model
-    
-    virtual void f() {}               // for dynamic_cast (which requires source class to be polymorphic)
+  TreeNode* m_parent;               // needed for the tree view model
+  
+  virtual void f() {}               // for dynamic_cast (which requires source class to be polymorphic)
 };
 
 #endif // TREENODE_H

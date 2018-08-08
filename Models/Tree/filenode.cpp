@@ -3,13 +3,13 @@
 
 FileNode::FileNode(QString text, QString icon) : TreeNode(text)
 {
-    this->icon=icon;
+  this->icon=icon;
 }
 
 void FileNode::write(QJsonObject &json) const
 {
-    json["text"]=text;
-    json["icon"]=icon;
+  json["text"]=text;
+  json["icon"]=icon;
 }
 
 void FileNode::setParent(DirNode *parent)
