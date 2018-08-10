@@ -198,7 +198,7 @@ void MainWindow::updateStatusBar(QString type, QString currentDir, QString total
   QString text = "";
   QStringList types= {"scanning", "finish", "cancel"};
 
-   (types.indexOf(type)) {
+  switch (types.indexOf(type)) {
   case 0:
     text = "Scanning: "+currentDir;
     break;

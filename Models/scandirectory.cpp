@@ -351,7 +351,7 @@ QStringList ScanDirectory::getFilters(QString filter)
 
   if (filter.length() != 0) {
     list = filter.split("\n");
-     (int i = 0;i<list.size();i++) {
+    for (int i = 0;i<list.size();i++) {
       list[i] = list[i].trimmed();
     }
   }
